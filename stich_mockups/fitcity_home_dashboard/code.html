@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitCity Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#25d1f4",
+                        "mint": "#00F5A0",
+                        "pulse": "#00D9FF",
+                        "peach": "#FF6B6B",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0a1112",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .cyber-gradient-mint {
+            background: linear-gradient(135deg, #00F5A0 0%, #00D9FF 100%);
+        }
+        .cyber-gradient-peach {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+        }
+        .progress-ring-glow {
+            filter: drop-shadow(0 0 8px #00F5A0);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<header class="p-6 pb-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-full border-2 border-primary/50 p-0.5">
+<img alt="User avatar" class="rounded-full w-full h-full object-cover" data-alt="Stylized 3D character avatar for user Alex" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz72Ai9k2ZJ23TIFWuikFshGuZwtbpjO65p6sLeU5LYnfuE8uPlUb5xZJcCX4toGz68CHYZMBQ7oPWaRAdD-0viuRYJE8jpxuFlFWET3pJ4MG8FbrNtVeLuFjCNg-ETT04H5_9uMxx-_JgnLjX-LM3m2Hz89-TaFYSz3NUtFOfhyEzkEdn76snMIfP7lG6PLwIto3pTHSYC1ShPaKoGFR8oxl54sz9ZH_fpVBEqZFWJvwXwOtWr0CpUTxNKRU-TMliB7wSdyWLvs4s"/>
+</div>
+<div>
+<h2 class="text-xl font-bold tracking-tight">Good Evening, Alex</h2>
+<p class="text-xs font-medium text-primary/80 bg-primary/10 px-2 py-0.5 rounded-full inline-block mt-1">
+                        Level 7 — Status: 5,240
+                    </p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-sm font-bold text-peach">🔥 12 Day Streak</span>
+<span class="text-sm font-bold text-mint">💰 247 Coins</span>
+</div>
+</div>
+</header>
+<main class="flex-1 p-4 space-y-4 pb-24 overflow-y-auto">
+<section class="liquid-glass rounded-2xl overflow-hidden relative group">
+<div class="absolute inset-0 bg-gradient-to-br from-pulse/20 via-transparent to-peach/10 opacity-50"></div>
+<div class="relative h-48 w-full bg-slate-900/40">
+<img alt="Skyline Preview" class="w-full h-full object-cover opacity-80" data-alt="Isometric 3D colorful building skyline in a futuristic city" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLEFjGRge88QYh_NHIEMMm9a7-4z6jn-_jOQJRJD_0b2OYN4tOckVcXGYNNT3m6WaaWuEJBoDCB_2SNbTJh9_Uj1V1JCuAXjBjH6xSNQgMRyUd28Z-hLRGN9H7tjmwB-oLI-Mm9M0SvHGt1WEijxokf0VVmoiNqiQFXCbpyzsihmA_RYSqwNm86NZ_s-n-V9TM7xFLrY5mo_2_cbq5xz9tBDrv0PsiUPfVjk2ix5cuIqJoAihQIxA9HtlvGX3souKjYgOPG9G6JQLL"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div>
+<h3 class="text-2xl font-bold text-white">Your Skyline</h3>
+<p class="text-primary text-sm font-medium flex items-center gap-1">
+                            Tap to explore <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</p>
+</div>
+<div class="liquid-glass p-2 rounded-xl border-mint/30 border">
+<span class="material-symbols-outlined text-mint text-3xl">domain</span>
+</div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-1 row-span-2 liquid-glass rounded-2xl p-4 flex flex-col border-white/5">
+<div class="flex justify-between items-start mb-4">
+<h4 class="font-bold text-lg leading-tight">Today's<br/>Tasks</h4>
+<div class="relative size-12 flex items-center justify-center">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36">
+<circle class="stroke-slate-700/50" cx="18" cy="18" fill="none" r="16" stroke-width="3"></circle>
+<circle class="stroke-mint progress-ring-glow" cx="18" cy="18" fill="none" r="16" stroke-dasharray="100" stroke-dashoffset="33" stroke-width="3"></circle>
+</svg>
+<span class="absolute text-[10px] font-bold">67%</span>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-mint text-xl" style="font-variation-settings: 'FILL' 1">check_circle</span>
+<span class="text-sm line-through opacity-50">5km Morning Run</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-mint text-xl" style="font-variation-settings: 'FILL' 1">check_circle</span>
+<span class="text-sm line-through opacity-50">Hydration (2L)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500 text-xl">radio_button_unchecked</span>
+<span class="text-sm">Evening Yoga</span>
+</div>
+</div>
+</div>
+<div class="col-span-1 liquid-glass rounded-2xl p-4 border-white/5 bg-gradient-to-br from-background-dark to-slate-900/50">
+<p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Body Age</p>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="text-3xl font-bold text-white">26</span>
+<span class="material-symbols-outlined text-mint">arrow_downward</span>
+</div>
+<p class="text-[10px] text-slate-400 mt-1 italic">Real age: 30</p>
+</div>
+<div class="col-span-1 liquid-glass rounded-2xl p-4 border-white/5 flex flex-col justify-between overflow-hidden relative">
+<div class="absolute -right-2 -bottom-2 opacity-10">
+<span class="material-symbols-outlined text-6xl text-mint">favorite</span>
+</div>
+<p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Lifespan Added</p>
+<div class="mt-2 flex items-center gap-2">
+<span class="text-xl font-bold text-mint">+0.8 yrs</span>
+<div class="size-2 rounded-full bg-mint animate-pulse shadow-[0_0_10px_#00F5A0]"></div>
+</div>
+</div>
+<div class="col-span-1 liquid-glass rounded-2xl p-4 border-white/5">
+<p class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Health Impact</p>
+<div class="space-y-2">
+<div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+<div class="bg-pulse h-full w-[85%]"></div>
+</div>
+<div class="flex justify-between text-[10px]">
+<span>Risk Reduction</span>
+<span class="text-pulse font-bold">85%</span>
+</div>
+</div>
+</div>
+<div class="col-span-1 liquid-glass rounded-2xl p-4 border-white/5 bg-gradient-to-tr from-peach/10 to-transparent">
+<div class="flex justify-between items-start">
+<p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Money Saved</p>
+<span class="material-symbols-outlined text-peach text-xl">savings</span>
+</div>
+<p class="text-lg font-bold text-white mt-1">₹12,000<span class="text-xs font-normal text-slate-400">/yr</span></p>
+</div>
+</div>
+</main>
+<nav class="fixed bottom-4 left-4 right-4 liquid-glass rounded-2xl border-white/10 px-4 py-3 flex justify-between items-center z-50">
+<a class="flex flex-col items-center text-primary" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1">home</span>
+<span class="text-[10px] font-bold mt-1 uppercase tracking-tighter">Home</span>
+<div class="w-1 h-1 bg-primary rounded-full mt-1 shadow-[0_0_8px_#25d1f4]"></div>
+</a>
+<a class="flex flex-col items-center text-slate-500" href="#">
+<span class="material-symbols-outlined text-2xl">apartment</span>
+<span class="text-[10px] font-bold mt-1 uppercase tracking-tighter">Skyline</span>
+</a>
+<div class="relative -mt-12 bg-primary rounded-full p-4 shadow-lg shadow-primary/30 border-4 border-background-dark">
+<span class="material-symbols-outlined text-background-dark text-3xl font-bold">add</span>
+</div>
+<a class="flex flex-col items-center text-slate-500" href="#">
+<span class="material-symbols-outlined text-2xl">leaderboard</span>
+<span class="text-[10px] font-bold mt-1 uppercase tracking-tighter">Ranking</span>
+</a>
+<a class="flex flex-col items-center text-slate-500" href="#">
+<span class="material-symbols-outlined text-2xl">person</span>
+<span class="text-[10px] font-bold mt-1 uppercase tracking-tighter">Profile</span>
+</a>
+</nav>
+</body></html>

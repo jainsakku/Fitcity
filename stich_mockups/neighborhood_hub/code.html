@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitCity Neighborhood Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#25d1f4",
+                        "carbon-mint": "#00F5A0",
+                        "electric-pulse": "#00D9FF",
+                        "digital-peach": "#FF6B6B",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#101f22",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.5rem", // 24px squircle equivalent
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .cyber-gradient-text {
+            background: linear-gradient(90deg, #00F5A0, #00D9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .squishy-btn:active {
+            transform: scale(0.96);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen pb-24">
+<!-- Header Section -->
+<header class="relative w-full px-4 pt-6 pb-4">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-carbon-mint to-electric-pulse flex items-center justify-center text-background-dark shadow-lg shadow-electric-pulse/20">
+<span class="material-symbols-outlined text-3xl font-bold">hub</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tight">FitCity</h1>
+<p class="text-xs text-slate-400 font-medium">Neighborhood Hub</p>
+</div>
+</div>
+<button class="glass-panel w-10 h-10 rounded-2xl flex items-center justify-center squishy-btn">
+<span class="material-symbols-outlined text-slate-300">notifications</span>
+</button>
+</div>
+<!-- Neighborhood Banner -->
+<div class="relative overflow-hidden rounded-2xl p-5 bg-slate-800/40 border border-slate-700/50">
+<div class="absolute top-0 right-0 p-3">
+<div class="bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/30">
+                    LEVEL 42
+                </div>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-2xl font-bold text-white flex items-center gap-2">🏘️ Bandra Crew</h2>
+<p class="text-carbon-mint text-sm font-medium italic">"Grind Together, Rise Together"</p>
+<div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-digital-peach text-sm">person</span>
+<span class="text-xs text-slate-300">Priya M. <span class="text-amber-400">👑 Mayor</span></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-electric-pulse text-sm">groups</span>
+<span class="text-xs text-slate-300">87 Active Members</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Visual: Skyline -->
+<section class="px-4 mb-6">
+<div class="relative w-full h-48 rounded-2xl overflow-hidden border border-slate-700/50 shadow-2xl">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Futuristic neon city skyline isometric view" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAYT1yiQfKmHIBsSylaU0lHIUubkHK0KOVVfeosvaw6qQehZBWOeSi_lX9gVP-ed7-ucgwwJzoxYJ34coUUZJCkkA2ebmzVbqrJe3L99goM_Zledu0cEGwQA0e96EwCQCSBrZyrSIujia1pLoJe4FoGbDnSUwMr8f52KxTcOwjZNUYqJVqjWN9ziNCV09FQ1qsUs8NGJ1dXRb4OrSpI_VafIsR1NZ9nwH5I1B-ymDMFhp0ch62DNJA79WPDztRms_eCMT57GujSEbPr')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<span class="text-xs font-bold tracking-widest uppercase text-slate-400">District Skyline</span>
+<h3 class="text-lg font-bold text-white">United Heights</h3>
+</div>
+<div class="absolute top-4 left-4 glass-panel px-3 py-1 rounded-full flex items-center gap-2">
+<span class="flex h-2 w-2 rounded-full bg-carbon-mint animate-pulse"></span>
+<span class="text-[10px] font-bold text-white">LIVE WORLD VIEW</span>
+</div>
+</div>
+</section>
+<!-- Bento Grid Section -->
+<main class="px-4 grid grid-cols-2 gap-4">
+<!-- Large Card: Stats -->
+<div class="col-span-2 glass-panel p-5 rounded-2xl flex flex-col gap-4 relative overflow-hidden">
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-primary/10 blur-3xl rounded-full"></div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Collective Hours</h3>
+<p class="text-4xl font-bold cyber-gradient-text mt-1">12,450h</p>
+<p class="text-xs text-slate-500 mt-1">Achieved this month</p>
+</div>
+<div class="flex flex-col items-end gap-2">
+<div class="bg-carbon-mint/10 text-carbon-mint px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 border border-carbon-mint/20">
+<span class="material-symbols-outlined text-xs">trending_up</span> WINNING!
+                    </div>
+<div class="text-right">
+<p class="text-[10px] text-slate-500 font-bold uppercase">Vs Rival</p>
+<p class="text-xs font-medium text-digital-peach">🆚 Koramangala Squad</p>
+<p class="text-[10px] text-slate-400">9,500 hrs</p>
+</div>
+</div>
+</div>
+<div class="h-px w-full bg-slate-700/50"></div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-electric-pulse">bolt</span>
+<span class="text-sm font-medium">Avg Streak: <span class="text-white">23 days</span></span>
+</div>
+<span class="material-symbols-outlined text-slate-500">chevron_right</span>
+</div>
+</div>
+<!-- Medium Card: Raid Boss -->
+<div class="col-span-2 md:col-span-1 glass-panel p-5 rounded-2xl flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<span class="text-xl">🐉</span>
+<h3 class="text-sm font-bold text-white">Raid Boss</h3>
+</div>
+<div>
+<p class="text-xs text-slate-400 mb-2">Burn 1M calories collectively</p>
+<div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-carbon-mint to-electric-pulse h-full rounded-full" style="width: 67%"></div>
+</div>
+<div class="flex justify-between mt-2">
+<p class="text-[10px] font-bold text-slate-300">670K / 1M kcal</p>
+<p class="text-[10px] font-bold text-digital-peach flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]">timer</span> 3d remaining
+                    </p>
+</div>
+</div>
+</div>
+<!-- Medium Card: Leaderboard -->
+<div class="col-span-2 md:col-span-1 glass-panel p-5 rounded-2xl flex flex-col gap-3">
+<h3 class="text-xs font-bold text-white uppercase tracking-wider">Top Members</h3>
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-slate-700 border border-carbon-mint/50 overflow-hidden">
+<img alt="Member Avatar" data-alt="User profile avatar circle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEwo7tjWfXu6bbVHebzxMW-qiqdhxgNrZmqj1HDUZQ-NfBUnKZAOJfanHKccy-IVUbn8W1VTugQOXokq7KImEKF6OSgEF6iyioyTrBmYOLKvYs8kdNdXspA2J07eTaMBDp0yzeuFahmRoedQiQu9_9OzIFg__AWl_r4h0zePDuAJH5W7Kj-MucoV83wI6jTBr7WwtEq43je9G4wjTZYhyEtHJmenZHw4eE_Vib8BoxzKIDQeowGHl6FEChlslXVloVLNMARn3PaHwu"/>
+</div>
+<span class="text-xs font-medium">Rohan K.</span>
+</div>
+<span class="text-xs font-bold text-electric-pulse">2,450</span>
+</div>
+<div class="flex items-center justify-between opacity-80">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-slate-700 border border-slate-600 overflow-hidden">
+<img alt="Member Avatar" data-alt="User profile avatar circle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeC0C5S-Sl7DknCa5RbOMiiPTKDDxKgm503bwjolL7hmSVQJD-7i_6H6tpSMlJSbeMbr4jnRrFOsOcthJ5T0zjEJaCNlFx7DZbODY9gQTJ6uClU-sSA95C7ezv7VZcFSHe5MRg8XMnZS8aiNqnE2yBoQOeHl4LLSR_vYtpiPQqk5oj2x28VwKcpD76_YAzMAJatznelv9q67tWLaUY4ylzyFoGdPjVuwcPye7yFbpFcRSob_dcqizSAn4gR5qcoo3-TMZgWHZMFEaI"/>
+</div>
+<span class="text-xs font-medium">Sarah T.</span>
+</div>
+<span class="text-xs font-bold text-slate-400">2,120</span>
+</div>
+<div class="flex items-center justify-between opacity-60">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-slate-700 border border-slate-600 overflow-hidden">
+<img alt="Member Avatar" data-alt="User profile avatar circle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnE37-OnYZ8LrDQ2QWj8QVFE3LNLlG2-Hg8IENPW7LD8hTy0vzaxeIluKXwLSu51bm7qVylaWyRoA0tTDzhxZwh3NdtIFDtEvCUyyNCDn16lqQSIVG3DNspJ8Tqeg_gE0SIemES10cpGr8nuithcwPyPgLMYA8NqZ69AEfjAFIi7Nx4pkiIy_g_D17Nv1OB-tdC0HvoCCM7v2QZhm-OY6mKHedp3XZrJ-F_njs3vqUjgjjFbRYG1-foK6r0HD6NZJJPNj_GmdAvbUz"/>
+</div>
+<span class="text-xs font-medium">Amit P.</span>
+</div>
+<span class="text-xs font-bold text-slate-400">1,980</span>
+</div>
+</div>
+</div>
+<!-- Small Card: Announcements -->
+<div class="col-span-2 glass-panel p-4 rounded-2xl flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-digital-peach/10 flex items-center justify-center text-digital-peach">
+<span class="material-symbols-outlined">campaign</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-0.5">
+<span class="text-[10px] font-bold text-digital-peach uppercase">Pinned Message</span>
+<span class="text-[10px] text-slate-500">• 2h ago</span>
+</div>
+<p class="text-xs text-slate-200 line-clamp-1">"Next weekend's city run starts at 6AM! Get ready!"</p>
+</div>
+<span class="material-symbols-outlined text-slate-500">push_pin</span>
+</div>
+</main>
+<!-- Bottom Action Area -->
+<div class="px-4 mt-8">
+<button class="w-full h-14 bg-gradient-to-r from-carbon-mint via-electric-pulse to-digital-peach rounded-2xl text-background-dark font-bold text-lg shadow-xl shadow-electric-pulse/20 squishy-btn flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">person_add</span>
+            Invite Friends
+        </button>
+</div>
+<!-- Bottom NavBar -->
+<nav class="fixed bottom-0 left-0 right-0 glass-panel border-t border-slate-700/50 px-4 pt-3 pb-6 flex justify-between items-center z-50">
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-electric-pulse" href="#">
+<span class="material-symbols-outlined font-fill">architecture</span>
+<span class="text-[10px] font-bold">Skyline</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">task_alt</span>
+<span class="text-[10px] font-bold">Tasks</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-[10px] font-bold">Ranks</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-bold">Profile</span>
+</a>
+</nav>
+</body></html>

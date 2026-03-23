@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitCity - Task Picker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00F5A0",
+            "secondary": "#00D9FF",
+            "background-light": "#f5f8f8",
+            "background-dark": "#0a0f10",
+            "card-dark": "rgba(255, 255, 255, 0.03)",
+            "glass": "rgba(255, 255, 255, 0.05)"
+          },
+          fontFamily: {
+            "display": ["Space Grotesk"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "2xl": "24px",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .squircle { border-radius: 24px; }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .gradient-border-selected {
+      background: linear-gradient(#0a0f10, #0a0f10) padding-box,
+                  linear-gradient(to right, #00F5A0, #00D9FF) border-box;
+      border: 2px solid transparent;
+    }
+    .cyber-gradient-text {
+      background: linear-gradient(to right, #00F5A0, #00D9FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .cyber-button {
+      background: linear-gradient(135deg, #00F5A0 0%, #00D9FF 100%);
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display selection:bg-primary/30">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Top AppBar & Progress -->
+<header class="flex flex-col gap-4 p-6 pb-2">
+<div class="flex items-center justify-between">
+<div class="text-slate-100 flex size-10 items-center justify-center glass-panel rounded-full cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-[10px] uppercase tracking-widest text-primary font-bold">FitCity</span>
+<div class="flex gap-1">
+<div class="h-1 w-4 rounded-full bg-primary"></div>
+<div class="h-1 w-4 rounded-full bg-primary"></div>
+<div class="h-1 w-8 rounded-full bg-primary shadow-[0_0_8px_rgba(0,245,160,0.6)]"></div>
+<div class="h-1 w-4 rounded-full bg-slate-700"></div>
+</div>
+</div>
+<div class="size-10"></div> <!-- Spacer -->
+</div>
+<div class="mt-4">
+<h1 class="text-3xl font-bold tracking-tight text-white">Pick Your Tasks</h1>
+<p class="text-slate-400 text-sm mt-1">Choose 3-6 tasks to start building your skyline</p>
+</div>
+</header>
+<!-- Content Area: Scrollable Bento Grid -->
+<main class="flex-1 overflow-y-auto px-6 pb-40">
+<!-- CARDIO Section -->
+<section class="mt-6">
+<h3 class="text-[11px] font-black tracking-[0.2em] text-secondary mb-4 uppercase">Cardio</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Selected Task -->
+<div class="squircle gradient-border-selected p-4 flex flex-col justify-between h-40 relative overflow-hidden group">
+<div class="absolute top-2 right-2 flex size-6 items-center justify-center rounded-full bg-primary text-black">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl">directions_run</span>
+<div>
+<p class="font-bold text-white text-base">Run 3km</p>
+<div class="flex text-[10px] text-primary mt-1">
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+<span class="material-symbols-outlined text-[12px]">star</span>
+<span class="material-symbols-outlined text-[12px]">star</span>
+</div>
+</div>
+<div class="flex gap-1 mt-2">
+<span class="px-2 py-0.5 rounded-full bg-primary/20 text-[9px] font-bold text-primary">3x/WEEK</span>
+</div>
+</div>
+<div class="squircle glass-panel p-4 flex flex-col justify-between h-40 opacity-80">
+<span class="material-symbols-outlined text-slate-400 text-3xl">directions_walk</span>
+<div>
+<p class="font-bold text-white text-base">Walk 5K steps</p>
+<div class="flex text-[10px] text-slate-500 mt-1">
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+<span class="material-symbols-outlined text-[12px]">star</span>
+<span class="material-symbols-outlined text-[12px]">star</span>
+<span class="material-symbols-outlined text-[12px]">star</span>
+<span class="material-symbols-outlined text-[12px]">star</span>
+</div>
+</div>
+<div class="flex gap-1 mt-2">
+<span class="px-2 py-0.5 rounded-full bg-white/5 text-[9px] font-bold text-slate-400">7x/WEEK</span>
+</div>
+</div>
+<div class="squircle glass-panel p-4 flex flex-col justify-between h-36 opacity-80">
+<span class="material-symbols-outlined text-slate-400 text-3xl">directions_bike</span>
+<p class="font-bold text-white text-sm">Cycling 30min</p>
+</div>
+<div class="squircle glass-panel p-4 flex flex-col justify-between h-36 opacity-80">
+<span class="material-symbols-outlined text-slate-400 text-3xl">fitbit_jumping_jacks</span>
+<p class="font-bold text-white text-sm">Jump Rope 15m</p>
+</div>
+</div>
+</section>
+<!-- STRENGTH Section -->
+<section class="mt-8">
+<h3 class="text-[11px] font-black tracking-[0.2em] text-secondary mb-4 uppercase">Strength</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Selected Task -->
+<div class="squircle gradient-border-selected p-4 flex flex-col justify-between h-40 relative">
+<div class="absolute top-2 right-2 flex size-6 items-center justify-center rounded-full bg-primary text-black">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl">fitness_center</span>
+<div>
+<p class="font-bold text-white text-base">Gym Workout</p>
+<div class="flex text-[10px] text-primary mt-1">
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+<span class="material-symbols-outlined text-[12px]">star</span>
+</div>
+</div>
+<div class="flex gap-1 mt-2">
+<span class="px-2 py-0.5 rounded-full bg-primary/20 text-[9px] font-bold text-primary">2x/WEEK</span>
+</div>
+</div>
+<div class="squircle glass-panel p-4 flex flex-col justify-between h-40 opacity-80">
+<span class="material-symbols-outlined text-slate-400 text-3xl">home_work</span>
+<p class="font-bold text-white text-base">Home Workout</p>
+<div class="flex gap-1 mt-2">
+<span class="px-2 py-0.5 rounded-full bg-white/5 text-[9px] font-bold text-slate-400">3x/WEEK</span>
+</div>
+</div>
+</div>
+</section>
+<!-- WELLNESS Section -->
+<section class="mt-8">
+<h3 class="text-[11px] font-black tracking-[0.2em] text-secondary mb-4 uppercase">Wellness</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Selected Task -->
+<div class="squircle gradient-border-selected p-4 flex flex-col justify-between h-40 relative">
+<div class="absolute top-2 right-2 flex size-6 items-center justify-center rounded-full bg-primary text-black">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl">self_improvement</span>
+<div>
+<p class="font-bold text-white text-base">Yoga Session</p>
+<div class="flex text-[10px] text-primary mt-1">
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+<span class="material-symbols-outlined text-[12px]">star</span>
+<span class="material-symbols-outlined text-[12px]">star</span>
+<span class="material-symbols-outlined text-[12px]">star</span>
+</div>
+</div>
+<div class="flex gap-1 mt-2">
+<span class="px-2 py-0.5 rounded-full bg-primary/20 text-[9px] font-bold text-primary">4x/WEEK</span>
+</div>
+</div>
+<div class="squircle glass-panel p-4 flex flex-col justify-between h-40 opacity-80">
+<span class="material-symbols-outlined text-slate-400 text-3xl">spa</span>
+<p class="font-bold text-white text-base">Meditation</p>
+<div class="flex gap-1 mt-2">
+<span class="px-2 py-0.5 rounded-full bg-white/5 text-[9px] font-bold text-slate-400">Daily</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SPORTS Section -->
+<section class="mt-8 mb-10">
+<h3 class="text-[11px] font-black tracking-[0.2em] text-secondary mb-4 uppercase">Sports</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="squircle glass-panel p-4 flex flex-col justify-between h-36 opacity-80">
+<span class="material-symbols-outlined text-slate-400 text-3xl">pool</span>
+<p class="font-bold text-white text-sm">Swimming 1hr</p>
+</div>
+<div class="squircle glass-panel p-4 flex flex-col justify-between h-36 opacity-80">
+<span class="material-symbols-outlined text-slate-400 text-3xl">sports_tennis</span>
+<p class="font-bold text-white text-sm">Outdoor Sports</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Liquid Glass Panel -->
+<footer class="fixed bottom-0 left-0 w-full p-6 pt-0">
+<div class="glass-panel squircle p-4 flex flex-col gap-4 shadow-2xl shadow-black/50">
+<!-- Health Impact Live Preview -->
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-3">
+<div class="flex size-8 items-center justify-center rounded-lg bg-primary/10">
+<span class="material-symbols-outlined text-primary text-xl">query_stats</span>
+</div>
+<div>
+<p class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Health Combo Impact</p>
+<p class="text-xs text-white font-bold">Body Age <span class="text-primary">-1.2yr</span> | <span class="text-secondary">+0.1yr</span> Lifespan</p>
+</div>
+</div>
+<div class="h-8 w-px bg-white/10"></div>
+<div class="text-right">
+<p class="text-[10px] text-slate-400 font-medium uppercase">Tasks</p>
+<p class="text-xs text-white font-bold">3 selected</p>
+</div>
+</div>
+<!-- Primary Action -->
+<button class="cyber-button w-full h-14 squircle flex items-center justify-center gap-2 text-black font-bold text-lg active:scale-95 transition-transform duration-100">
+          Continue
+          <span class="material-symbols-outlined font-black">arrow_forward</span>
+</button>
+</div>
+</footer>
+<!-- Background Decorative Gradients -->
+<div class="fixed top-[-10%] left-[-10%] size-64 bg-primary/10 blur-[120px] -z-10"></div>
+<div class="fixed bottom-[-10%] right-[-10%] size-96 bg-secondary/10 blur-[150px] -z-10"></div>
+</div>
+</body></html>

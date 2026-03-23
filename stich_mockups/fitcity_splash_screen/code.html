@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#25d1f4",
+                        "mint": "#00ffcc",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#101f22",
+                        "stone-glow": "#2a2d2a",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "squircle": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased overflow-hidden">
+<div class="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-background-dark">
+<!-- Background Layer: Stone/Taupe Undertones & Particles -->
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-b from-stone-glow/20 via-background-dark to-background-dark"></div>
+<!-- Particle Effect Simulation -->
+<div class="absolute top-1/4 left-1/4 w-1 h-1 bg-primary/40 rounded-full blur-[2px]"></div>
+<div class="absolute top-1/3 right-1/4 w-1.5 h-1.5 bg-mint/30 rounded-full blur-[1px]"></div>
+<div class="absolute bottom-1/3 left-1/2 w-1 h-1 bg-primary/50 rounded-full blur-[3px]"></div>
+<div class="absolute top-1/2 right-10 w-2 h-2 bg-primary/20 rounded-full blur-[4px]"></div>
+</div>
+<!-- Top Navigation (Minimal) -->
+<div class="relative z-10 flex w-full items-center justify-between p-6">
+<div class="text-slate-100 flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-100/10 backdrop-blur-md">
+<span class="material-symbols-outlined">menu</span>
+</div>
+<div class="text-slate-100/50 text-sm font-medium tracking-widest uppercase">Premium</div>
+</div>
+<!-- Center: Hero Content with 2.5D Isometric City -->
+<div class="relative z-10 flex flex-col items-center justify-center flex-1 w-full px-6">
+<!-- Isometric Skyline Container -->
+<div class="relative w-full max-w-sm aspect-square flex items-center justify-center">
+<!-- Liquid Glass Background Glow -->
+<div class="absolute inset-0 bg-primary/10 rounded-full blur-[80px]"></div>
+<!-- Skyline Silhouette (Represented by layered SVGs for depth) -->
+<div class="relative w-64 h-64 flex items-center justify-center bg-gradient-to-br from-primary/20 to-transparent rounded-full border border-white/10 backdrop-blur-sm shadow-2xl overflow-hidden" data-alt="Glowing 2.5D isometric city skyline silhouette">
+<div class="absolute inset-0 flex items-center justify-center">
+<!-- Simplified Isometric Representation -->
+<div class="w-48 h-48 opacity-80 mix-blend-screen bg-center bg-no-repeat bg-contain" data-alt="Modern isometric city skyline in neon blue" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBYlmZPkRM6B_lq1-PmMdoiSMT2qrm9f34DbXfSwB7jvq8-zdJR5cGJG4pnyuk5rVoYsfKy95rjj6tfuAfn278FV_suh3S6IJYVU23gpJNEOvfcA10QZWm18IHBYF17VBtSqQ0NEkF1ybkJVXh9f61uK01XMyzYezuC_HT3Xv_udN0LlvmJQeOstWgpbJjY-56OnL9QoHIie5NitBRi84ken32YK2oN7lOTqzjBoQpkS23K3SXnuvdw0kbksq5sS6quH7r5kAHWnrpr');">
+</div>
+</div>
+</div>
+<!-- Logo Overlay -->
+<div class="absolute -bottom-4 bg-background-dark/80 backdrop-blur-xl border border-white/10 px-8 py-3 rounded-squircle shadow-2xl">
+<h1 class="text-slate-100 text-4xl font-bold tracking-tight">Fit<span class="text-primary">City</span></h1>
+</div>
+</div>
+<!-- Tagline -->
+<div class="mt-12 text-center">
+<h2 class="text-slate-100 text-[28px] font-bold leading-tight tracking-tight">
+                    Your Workouts.<br/>
+                    Your Skyline. <span class="text-primary">Your City.</span>
+</h2>
+<p class="text-slate-400 mt-4 text-base font-medium">Build your legacy, one rep at a time.</p>
+</div>
+</div>
+<!-- Bottom 20% (Thumb-Zone): Buttons -->
+<div class="relative z-10 flex w-full max-w-md flex-col gap-4 px-6 pb-12">
+<!-- Primary Button: Carbon Mint to Electric Pulse -->
+<button class="group relative flex h-16 w-full cursor-pointer items-center justify-center overflow-hidden rounded-squircle bg-gradient-to-r from-[#112a26] to-[#25d1f4] p-[1px] shadow-[0_0_20px_rgba(37,209,244,0.3)] active:scale-[0.98] transition-all duration-200">
+<div class="flex h-full w-full items-center justify-center rounded-squircle bg-gradient-to-r from-[#1d3d37] to-primary px-5">
+<span class="text-[#101f22] text-lg font-bold leading-normal tracking-wide">Get Started</span>
+<span class="material-symbols-outlined ml-2 text-[#101f22]">arrow_forward</span>
+</div>
+</button>
+<!-- Secondary Button: Heavy Frosted Glass -->
+<button class="relative flex h-16 w-full cursor-pointer items-center justify-center overflow-hidden rounded-squircle border border-white/10 bg-white/5 backdrop-blur-2xl active:scale-[0.98] transition-all duration-200">
+<span class="text-slate-100 text-base font-semibold leading-normal">I Already Have An Account</span>
+</button>
+<!-- Bottom Indicator -->
+<div class="w-1/3 h-1 bg-slate-100/20 rounded-full mx-auto mt-4"></div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#25d1f4",
+                        "carbon-mint": "#00F5A0",
+                        "electric-pulse": "#00D9FF",
+                        "digital-peach": "#FF6B6B",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0a0f10",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.5rem", /* 24px per request */
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .squishy-btn {
+            transition: transform 0.1s ease-out;
+        }
+        .squishy-btn:active {
+            transform: scale(0.95);
+        }
+        .cyber-gradient {
+            background: linear-gradient(135deg, #00F5A0 0%, #00D9FF 100%);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen selection:bg-primary/30">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto border-x border-white/5">
+<header class="flex items-center p-6 justify-between z-10">
+<button class="w-10 h-10 flex items-center justify-center rounded-xl glass-panel text-slate-100 squishy-btn">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight uppercase italic text-transparent bg-clip-text bg-gradient-to-r from-carbon-mint to-electric-pulse">FitCity</h1>
+<div class="w-10"></div>
+</header>
+<main class="flex-1 flex flex-col px-6 pb-32">
+<div class="mb-4">
+<h2 class="text-3xl font-bold leading-tight tracking-tight text-white">Create Your<br/><span class="text-carbon-mint">Character</span></h2>
+</div>
+<div class="relative w-full aspect-square mb-8 flex items-center justify-center">
+<div class="absolute inset-0 bg-primary/10 blur-[80px] rounded-full"></div>
+<div class="w-full h-full glass-panel rounded-2xl flex items-center justify-center overflow-hidden">
+<img class="w-4/5 h-4/5 object-contain" data-alt="Stylized 3D low-poly fitness avatar preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr12SZK1MS0oE-DvflTI4Yt-2ZU0zMdnk1zPmmXZTDn8hH1GOV4CZU9aV1v2wyv2bHVgT6S3_8PM6_-PKRbJgK_vEgFciNd9DiYQFsFKj04H5RgOGc5EtvojPfi-VPMblqwnOZWhU0Vnw62SOdE1TcdZ4xkUIrHXLEXd2u-sM3vG_QXoviaWVLE5mZyjepJCUzBEf4MelfEVsN6FvK67OJDf_0jz2x6LtNNe_Ra7UWJgFWNQTHbG55WEoP0LlixBnOZMQ_E9JXpF3X"/>
+</div>
+<div class="absolute bottom-4 right-4 flex gap-2">
+<button class="p-2 rounded-full glass-panel text-white squishy-btn">
+<span class="material-symbols-outlined text-sm">rotate_right</span>
+</button>
+</div>
+</div>
+<section class="space-y-6">
+<div>
+<label class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 block">Character Name</label>
+<input class="w-full h-14 rounded-2xl glass-panel border-none focus:ring-2 focus:ring-primary/50 text-white placeholder-slate-500 px-5" placeholder="Enter name..." type="text"/>
+</div>
+<div>
+<label class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 block">Gender Identity</label>
+<div class="flex gap-3 overflow-x-auto hide-scrollbar">
+<button class="flex items-center gap-2 px-5 py-3 rounded-2xl glass-panel border-primary/40 bg-primary/10 text-white squishy-btn">
+<span class="material-symbols-outlined text-carbon-mint">male</span>
+<span class="font-medium">Male</span>
+</button>
+<button class="flex items-center gap-2 px-5 py-3 rounded-2xl glass-panel text-slate-400 squishy-btn">
+<span class="material-symbols-outlined">female</span>
+<span class="font-medium">Female</span>
+</button>
+<button class="flex items-center gap-2 px-5 py-3 rounded-2xl glass-panel text-slate-400 squishy-btn">
+<span class="material-symbols-outlined">transgender</span>
+<span class="font-medium">NB</span>
+</button>
+</div>
+</div>
+<div>
+<label class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 block">Body Type</label>
+<div class="flex gap-3 overflow-x-auto hide-scrollbar">
+<button class="flex flex-col items-center gap-2 p-4 min-w-[100px] rounded-2xl glass-panel text-slate-400 squishy-btn">
+<span class="material-symbols-outlined text-3xl">accessibility_new</span>
+<span class="text-xs">Lean</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-4 min-w-[100px] rounded-2xl glass-panel border-primary/40 bg-primary/10 text-white squishy-btn">
+<span class="material-symbols-outlined text-3xl text-carbon-mint">body_system</span>
+<span class="text-xs">Athletic</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-4 min-w-[100px] rounded-2xl glass-panel text-slate-400 squishy-btn">
+<span class="material-symbols-outlined text-3xl">fitness_center</span>
+<span class="text-xs">Buff</span>
+</button>
+</div>
+</div>
+<div>
+<label class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 block">Skin Tone</label>
+<div class="flex gap-4 p-1">
+<button class="w-8 h-8 rounded-full ring-2 ring-white bg-[#FFDBAC] squishy-btn"></button>
+<button class="w-8 h-8 rounded-full bg-[#F1C27D] squishy-btn"></button>
+<button class="w-8 h-8 rounded-full bg-[#E0AC69] squishy-btn"></button>
+<button class="w-8 h-8 rounded-full bg-[#8D5524] squishy-btn"></button>
+<button class="w-8 h-8 rounded-full bg-[#C68642] squishy-btn"></button>
+<button class="w-8 h-8 rounded-full bg-[#5C3817] squishy-btn"></button>
+</div>
+</div>
+<div class="pt-4">
+<label class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 block">Choose Your Fitness Era</label>
+<div class="grid grid-cols-2 gap-3">
+<div class="p-4 rounded-2xl glass-panel flex flex-col gap-2 border-primary/20 bg-primary/5 squishy-btn">
+<span class="text-2xl">🌱</span>
+<h4 class="font-bold text-sm text-white">Fresh Start</h4>
+<p class="text-[10px] text-slate-400">Beginner focus</p>
+</div>
+<div class="p-4 rounded-2xl glass-panel flex flex-col gap-2 squishy-btn">
+<span class="text-2xl">💪</span>
+<h4 class="font-bold text-sm text-white">Serious</h4>
+<p class="text-[10px] text-slate-400">Intermediate</p>
+</div>
+<div class="p-4 rounded-2xl glass-panel flex flex-col gap-2 squishy-btn">
+<span class="text-2xl">🔥</span>
+<h4 class="font-bold text-sm text-white">Beast Mode</h4>
+<p class="text-[10px] text-slate-400">Advanced grind</p>
+</div>
+<div class="p-4 rounded-2xl glass-panel flex flex-col gap-2 border-digital-peach/30 squishy-btn">
+<span class="text-2xl">🏆</span>
+<h4 class="font-bold text-sm text-white">Elite Athlete</h4>
+<p class="text-[10px] text-slate-400">Pro performance</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-6 bg-gradient-to-t from-background-dark via-background-dark/90 to-transparent">
+<div class="flex flex-col gap-6 items-center">
+<button class="w-full h-16 rounded-2xl cyber-gradient text-background-dark font-black text-lg uppercase tracking-widest shadow-[0_0_20px_rgba(0,245,160,0.4)] squishy-btn flex items-center justify-center gap-2">
+                    Continue
+                    <span class="material-symbols-outlined font-black">arrow_forward</span>
+</button>
+<div class="flex gap-2">
+<div class="w-2 h-2 rounded-full bg-carbon-mint shadow-[0_0_8px_rgba(0,245,160,0.8)]"></div>
+<div class="w-2 h-2 rounded-full bg-slate-700"></div>
+<div class="w-2 h-2 rounded-full bg-slate-700"></div>
+<div class="w-2 h-2 rounded-full bg-slate-700"></div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

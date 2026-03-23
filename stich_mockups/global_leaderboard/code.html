@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitCity Global Leaderboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#25d1f4",
+                        "carbon-mint": "#00F5A0",
+                        "electric-pulse": "#00D9FF",
+                        "digital-peach": "#FF6B6B",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0a0f10",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.375rem", // 22px Squircle approximation
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .cyber-gradient-text {
+            background: linear-gradient(90deg, #00F5A0, #00D9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .podium-glow-1 {
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.4);
+        }
+        .squircle {
+            border-radius: 22px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+<!-- Top Header -->
+<header class="sticky top-0 z-30 flex items-center bg-background-dark/80 backdrop-blur-md p-4 justify-between border-b border-white/5">
+<div class="text-slate-100 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center">Global Leaderboard</h2>
+<div class="flex size-10 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-white">search</span>
+</div>
+</header>
+<!-- Filter Chips -->
+<div class="flex gap-3 p-4 overflow-x-auto no-scrollbar">
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-carbon-mint to-electric-pulse px-6 shadow-lg shadow-electric-pulse/20">
+<p class="text-background-dark text-sm font-bold leading-normal">All Time</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-white/5 border border-white/10 px-6 hover:bg-white/10 transition-all">
+<p class="text-slate-300 text-sm font-medium leading-normal">This Month</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-white/5 border border-white/10 px-6 hover:bg-white/10 transition-all">
+<p class="text-slate-300 text-sm font-medium leading-normal">This Week</p>
+</div>
+</div>
+<!-- Podium Section -->
+<div class="relative px-4 pt-8 pb-4 flex items-end justify-center gap-2 mb-4">
+<!-- Rank 2 -->
+<div class="flex flex-col items-center flex-1">
+<div class="relative mb-3">
+<div class="size-20 rounded-full border-4 border-slate-400 bg-center bg-cover overflow-hidden" data-alt="Avatar of Arjun K." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDqbuKl3uglLUbhYA7qrWOfpQFJqCZ12TtnhcHaat-k3O-YoJ0AlmsYAm1JqixdWU62FF4TBDIvg72khxfFCC36SGKrHXzqZrZrIOHhHIIPCPz0SNN49qDUxuxrQ5E-n98kjEC-Fqk47xzPZFmDt24GQ0eXl3sU0T7Te2ioTG-Q-Q5Hv20Eldl71GKmcz58Tq5j-ChUrD7Rd2Xsy0bulikXfCI5FZKle5EFd1Jh9u88g0DGpoVjHasGYgejtDcyNnz8HKktE7oXqj_i');"></div>
+<div class="absolute -top-2 -right-1 bg-slate-400 text-background-dark text-[10px] font-black px-2 py-0.5 rounded-full">#2</div>
+</div>
+<div class="text-center">
+<p class="text-white font-bold text-sm">Arjun K.</p>
+<p class="text-slate-400 text-xs font-medium">128,300 pts</p>
+</div>
+<div class="mt-4 w-full h-16 bg-white/5 rounded-t-xl flex items-center justify-center overflow-hidden border-x border-t border-white/10">
+<img alt="" class="opacity-40 grayscale group-hover:grayscale-0 transition-all" data-alt="Isometric city skyline thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9NWnAcMEc9QaGxiP9Z2Jxr_hTAbkrXq-eIOIG3JXhUyzHAqa6IePIhzfXTAip8mzEcku1d-kC9Wd2-TtInS2hNtxlDYLYo3aTHtpZxh7w34pHL5Lr5_2XXq-Xzd8wb9S5_3RyHWzFVsBoiJ8CpRijIY6-oH-23w55U-7v45IRKGaowlXWmH_4nw7-dunqH2bPfUmzegJSqfKRyH--WsRvpWNe-5cqwRw018of5RF5FV2YtDsuljebq0pgHe0roXqO0ThZyhpUC70w"/>
+</div>
+</div>
+<!-- Rank 1 -->
+<div class="flex flex-col items-center flex-1 z-10 scale-110 -translate-y-4">
+<div class="relative mb-3">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-yellow-400 animate-pulse">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1">workspace_premium</span>
+</div>
+<div class="size-24 rounded-full border-4 border-electric-pulse podium-glow-1 bg-center bg-cover overflow-hidden" data-alt="Avatar of Priya M." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDpWCNnbYNM7NFFEecfr4dWVvAtA7gZk-WFP6R8PRyQFiTJoyq_ZfH7Gxa-46ypZfoV19krk7mE7C_eU0Xm_RgaNNWU2HDe7B1k-pMWB-MfShRuaEJ2wt0wnPUgzZZh66Zld5_3R41FCW2p_fFg54bVFv3i1eQ7aQSb8gw37EeWJsRK3l-vOpsd86_UyscEyBPqwXZ3cIi2ttUh03zQgRWlan4sYE-7uXZO2Ffv0BEJ42-3Z6RHvgR-irEi4jLwt-mPNLIPbhSKZ-53');"></div>
+<div class="absolute -top-2 -right-1 bg-electric-pulse text-background-dark text-[10px] font-black px-2 py-0.5 rounded-full">#1</div>
+</div>
+<div class="text-center">
+<p class="text-white font-black text-base">Priya M.</p>
+<p class="text-carbon-mint text-xs font-bold">142,500 pts</p>
+</div>
+<div class="mt-4 w-full h-24 bg-gradient-to-b from-electric-pulse/20 to-transparent rounded-t-xl flex items-center justify-center overflow-hidden border-x border-t border-electric-pulse/30">
+<img alt="" class="opacity-60" data-alt="Isometric city skyline thumbnail for winner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXZkpkTcFDxM7NcoZaTeWtm0tZPfc8Yw3CLkuQwR6B3XByloKcK6aZ7JaexNAiwA6fgkXXz0u_L6apcimx2YTBdiqJ8YHOWQaS4kjN0jsHMtE574vdvdLO1BqVNHU2vUK_pT6tHVbcKz5-GjME9cldgalnIjqhverxjSYAKNyInq4y3529Wqrg3bTQorFKl0cr6G7Lw-ng2iQ8zvvxEB6kRfnB5QFaP1PpfQpGuadHwNWbBhtrwjrh15TAlcqNfEQTBPeo2PbTyzIy"/>
+</div>
+</div>
+<!-- Rank 3 -->
+<div class="flex flex-col items-center flex-1">
+<div class="relative mb-3">
+<div class="size-20 rounded-full border-4 border-[#CD7F32] bg-center bg-cover overflow-hidden" data-alt="Avatar of Maya S." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDT9CbTax4FhNFiwGcLY_j6DRpkhrXsK1zfqwj8InZMFmbYttZAMHwYk3VQ0aR-RJjLM4TaK48FKkQ8BJOKszUPSn3mWJMhwO3OKc7IKbEkAgfQXbH1G9CrS-l2PKY0f4cujrMqWZxlYdkh0vHBNiAn5MbWvuyRwJJEnSazQvBNOFqjwN-AhnPQg4L5DhwdXs6tgnKNmwvU-FLllwz2v5_HwtGATM9d3GCEu29NjN-zTrO6zq5H9Xcj1n4bD4ZjSlUW08k6OsKdct0p');"></div>
+<div class="absolute -top-2 -right-1 bg-[#CD7F32] text-background-dark text-[10px] font-black px-2 py-0.5 rounded-full">#3</div>
+</div>
+<div class="text-center">
+<p class="text-white font-bold text-sm">Maya S.</p>
+<p class="text-slate-400 text-xs font-medium">115,800 pts</p>
+</div>
+<div class="mt-4 w-full h-12 bg-white/5 rounded-t-xl flex items-center justify-center overflow-hidden border-x border-t border-white/10">
+<img alt="" class="opacity-40 grayscale" data-alt="Isometric city skyline thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDkAefbID2Ul-pPdHFnVWpXjr7xBS5B4LL67pUubGoV4Rt9em2z1Q7zvnd16jbh6R5Fgve6JLaa6MfbXYJrmoxTyDxmQqwVf8cEnnmO7e1H6OPvNmCucIOedaA3Sy-SDjAIDca4JrJtTuOKblBABRz1EK--EaEY-aPKo8ApxAKyRsumOOfSlkep9B2lpflxV9pRyaIA9K7Fg9PIozbPyiqu3sevmNap6pUeZL6YtOpSjjOI95ia4rRQ1CfKR0kV-0EexgZhqA06XQz"/>
+</div>
+</div>
+</div>
+<!-- Ranked List (Bento-style Glass Cards) -->
+<div class="flex-1 px-4 space-y-3 pb-24">
+<!-- Rank 4 -->
+<div class="liquid-glass squircle p-4 flex items-center gap-4 hover:bg-white/10 transition-all cursor-pointer group">
+<div class="text-slate-400 font-bold text-lg w-6">4</div>
+<div class="size-12 rounded-full border border-white/10 bg-center bg-cover" data-alt="User avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAAwSLAXgEmHPAkxw4HBx9qDVCAiFJgpCoag1ucKCkvOB-pKUM46ZbE5__SBE4Z0eOz6WHcGLvre397k-Iv4Vd3HuX43oNBgz4y9RxcxgBOqzYxtI159XWbkB7uA5kctApAhHgpZFMyGRXgxjPphRKNMYUhNi88FyiTC1c2nZ_Fu2lUbdLi9SdrAqWhjCUSo5qjSEtP2ik5mh-pBevTNQ4pzZUM8wQ2ZDzWZnuOlJAUeaotTJ3StyRymdNUCysMXYIr81vuOUg6yjfL');"></div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<h4 class="text-white font-bold">Ravi P.</h4>
+<span class="text-digital-peach flex items-center gap-1 text-xs font-bold">
+<span class="material-symbols-outlined text-sm">local_fire_department</span> 365
+                    </span>
+</div>
+<div class="flex items-center gap-2 text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+<span>Lvl 20</span>
+<span class="size-1 rounded-full bg-slate-700"></span>
+<span>98,500 STATUS</span>
+</div>
+</div>
+</div>
+<!-- Rank 5 -->
+<div class="liquid-glass squircle p-4 flex items-center gap-4 hover:bg-white/10 transition-all cursor-pointer">
+<div class="text-slate-400 font-bold text-lg w-6">5</div>
+<div class="size-12 rounded-full border border-white/10 bg-center bg-cover" data-alt="User avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCBmjv3Pgptt3QRe9jUOWPRBEPQAOH4RVDxs_geXe_puCmi4QGV9s35TeuNOxbnaMXsrSQqqE_LWV4BKn8iaH4EsTlQF-Xzl0QYUPUyYsJcFxG7fzbpS0TmqDXpUrGMqbJy2BSfYNT6t1Hk9pCGGNVABQWMduqgit0Jog-nr43o1yOeqedjsifV7T0N4l99RPgPnXnWcCc-X5k7hIG0pbaovhxQfftg3Z0U-YclkPyzkXRUTy3S3yxw1Lx-ODzVkVxMOqYQZ0mcZofx');"></div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<h4 class="text-white font-bold">Sara J.</h4>
+<span class="text-digital-peach flex items-center gap-1 text-xs font-bold">
+<span class="material-symbols-outlined text-sm">local_fire_department</span> 180
+                    </span>
+</div>
+<div class="flex items-center gap-2 text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+<span>Lvl 18</span>
+<span class="size-1 rounded-full bg-slate-700"></span>
+<span>87,200 STATUS</span>
+</div>
+</div>
+</div>
+<!-- Spacer for visual rhythm -->
+<div class="flex justify-center py-2 opacity-20">
+<span class="material-symbols-outlined">more_vert</span>
+</div>
+<!-- YOU (Rank 127 Highlighted) -->
+<div class="p-[2px] rounded-[24px] bg-gradient-to-r from-electric-pulse via-digital-peach to-carbon-mint shadow-2xl shadow-electric-pulse/30 ring-4 ring-background-dark">
+<div class="bg-background-dark/95 backdrop-blur-xl rounded-[22px] p-4 flex items-center gap-4 scale-[0.98]">
+<div class="text-electric-pulse font-black text-lg w-8">127</div>
+<div class="size-12 rounded-full border-2 border-electric-pulse bg-center bg-cover" data-alt="Your avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAbdPxo9XndjsbJeMJngiToFu8kxDG7N6aueIrpcHrgZAlazSI3GGU6IhFyO2otW5yNRSRrZY0V5sEX55kK-vQVh4lw1d7cfvpIK-8S-IOcNkEjfq4kpruTiL4vlFPVCj8wvJnDMtQYzuau5u0WNbfVH9kEu8IjQ2dUAjZlTF0ztkrW1kEQ9LqXdrzGduDhwrEDB4JSQqZSM84h-JSPFEDo-Lt7BO8RBFoFy03Abo8bRXyZEFMgqFac5Vk1pddfKlC2JWAT0Pn2xRfE');"></div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<h4 class="text-white font-black italic">YOU (ALEX)</h4>
+<span class="text-digital-peach flex items-center gap-1 text-xs font-black">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">local_fire_department</span> 12
+                        </span>
+</div>
+<div class="flex items-center gap-2 text-[10px] uppercase tracking-wider text-electric-pulse/70 font-black">
+<span>Lvl 7</span>
+<span class="size-1 rounded-full bg-electric-pulse/30"></span>
+<span>5,240 STATUS</span>
+</div>
+</div>
+<div class="animate-bounce">
+<span class="material-symbols-outlined text-electric-pulse">keyboard_double_arrow_up</span>
+</div>
+</div>
+</div>
+<!-- Rank 128 -->
+<div class="liquid-glass squircle p-4 flex items-center gap-4 opacity-60">
+<div class="text-slate-400 font-bold text-lg w-6">128</div>
+<div class="size-12 rounded-full border border-white/10 bg-center bg-cover" data-alt="User avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAF3X7IarzktCSLdMvXjIlUaAH5hZYUGRv-4q1FTNg5p0uO7p89D9uTc4Ib5tXHzUiLeqaqtCAZbKSBXKsh7is_XsJpAa4aEM73_3u8b3RPpieOgFYTOKOgjUC8AoBxCJIHpVMIPjQ7RbuZA8e-TGuZeaWlZvfpGAc1TssSeMJYq41Ek4zOXJkdCEpXQE_oyXsSi5PKMmqHaKKjU5tz0UOmpSVhJ8Vg7YagYW77q6kv3cVAeBXH9m3pM6pXAOM1rOaasMuMznbPDuIB');"></div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<h4 class="text-white font-bold">Kasper T.</h4>
+<span class="text-slate-500 flex items-center gap-1 text-xs font-bold">
+<span class="material-symbols-outlined text-sm">local_fire_department</span> 4
+                    </span>
+</div>
+<div class="flex items-center gap-2 text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+<span>Lvl 6</span>
+<span class="size-1 rounded-full bg-slate-700"></span>
+<span>4,980 STATUS</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50">
+<div class="bg-background-dark/80 backdrop-blur-2xl border-t border-white/10 px-6 pb-8 pt-4 flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[28px]">home</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[28px]">location_city</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Skyline</span>
+</a>
+<div class="relative -top-6">
+<div class="bg-gradient-to-tr from-carbon-mint to-electric-pulse p-4 rounded-2xl shadow-xl shadow-electric-pulse/30 ring-8 ring-background-dark/50 transform active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-background-dark font-black text-3xl">add</span>
+</div>
+</div>
+<a class="flex flex-col items-center gap-1 text-electric-pulse" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1">leaderboard</span>
+<div class="absolute -top-1 -right-1 size-2 bg-digital-peach rounded-full ring-2 ring-background-dark"></div>
+</div>
+<span class="text-[10px] font-black uppercase tracking-tighter">Global</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[28px]">person</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Profile</span>
+</a>
+</div>
+</nav>
+<!-- Custom Scrollbar Hide -->
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitCity - Workout Complete</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#25d1f4",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#101f22",
+                        "carbon-mint": "#00F5A0",
+                        "electric-pulse": "#00D9FF",
+                        "digital-peach": "#FF6B6B",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .thermal-glow {
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.2), inset 0 0 15px rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+        .cyber-gradient-text {
+            background: linear-gradient(90deg, #00F5A0, #00D9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .particle-bg {
+            background-image: radial-gradient(circle at 50% 50%, rgba(37, 209, 244, 0.1) 0%, transparent 50%),
+                              radial-gradient(circle at 20% 80%, rgba(0, 245, 160, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 80% 20%, rgba(255, 107, 107, 0.05) 0%, transparent 40%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-display text-slate-100 overflow-x-hidden selection:bg-primary/30">
+<!-- Background Decoration -->
+<div class="fixed inset-0 z-0 particle-bg pointer-events-none"></div>
+<div class="relative z-10 min-h-screen flex flex-col max-w-md mx-auto pb-8">
+<!-- Top App Bar -->
+<header class="flex items-center p-4 justify-between">
+<div class="text-slate-100 flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</div>
+<h2 class="text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-12">FitCity</h2>
+</header>
+<!-- Main Celebration Content -->
+<main class="flex-1 px-6 space-y-6">
+<!-- Hero Section -->
+<div class="flex flex-col items-center pt-4 text-center">
+<div class="relative mb-6">
+<div class="absolute inset-0 bg-electric-pulse/30 blur-2xl rounded-full scale-125"></div>
+<div class="relative size-24 bg-gradient-to-tr from-carbon-mint to-electric-pulse rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(0,217,255,0.5)] border-4 border-white/20">
+<span class="material-symbols-outlined text-white text-5xl font-bold">check</span>
+</div>
+</div>
+<h1 class="text-white tracking-tight text-4xl font-bold leading-tight mb-2">Workout Complete! 🎉</h1>
+<div class="flex flex-col gap-1">
+<span class="text-slate-400 text-lg font-medium">Gym Workout — 1hr</span>
+<span class="text-carbon-mint text-base font-bold flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-sm">local_fire_department</span>
+                        13 Day Streak!
+                    </span>
+</div>
+</div>
+<!-- Earnings Card -->
+<div class="liquid-glass rounded-xl p-5 relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 size-24 bg-primary/10 blur-3xl rounded-full"></div>
+<h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">What You Just Earned</h3>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-white/5 rounded-lg p-3 flex items-center gap-3 border border-white/5">
+<div class="size-10 rounded-full bg-carbon-mint/20 flex items-center justify-center shadow-[0_0_15px_rgba(0,245,160,0.3)]">
+<span class="material-symbols-outlined text-carbon-mint">star</span>
+</div>
+<div>
+<div class="text-xl font-bold text-carbon-mint">+73</div>
+<div class="text-[10px] text-slate-400 uppercase">Status</div>
+</div>
+</div>
+<div class="bg-white/5 rounded-lg p-3 flex items-center gap-3 border border-white/5">
+<div class="size-10 rounded-full bg-yellow-400/20 flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.3)]">
+<span class="material-symbols-outlined text-yellow-400">payments</span>
+</div>
+<div>
+<div class="text-xl font-bold text-yellow-400">+7</div>
+<div class="text-[10px] text-slate-400 uppercase">Coins</div>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold">
+<span>Level 7</span>
+<span class="text-electric-pulse">68% to Level 8</span>
+</div>
+<div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-carbon-mint to-electric-pulse w-[68%] rounded-full shadow-[0_0_10px_rgba(0,217,255,0.4)]"></div>
+</div>
+</div>
+</div>
+<!-- Health Impact Card (Thermal Glow) -->
+<div class="liquid-glass thermal-glow rounded-xl p-5 relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 size-20 bg-digital-peach/10 blur-2xl rounded-full"></div>
+<h3 class="text-sm font-bold text-digital-peach uppercase tracking-widest mb-4">Health Impact</h3>
+<div class="space-y-4">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-digital-peach mt-0.5">genetics</span>
+<p class="text-sm leading-relaxed">You just reduced <span class="text-white font-bold">diabetes risk by 0.3%!</span></p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-digital-peach/5 border border-digital-peach/10 rounded-lg p-3">
+<div class="text-[10px] text-slate-400 uppercase mb-1">Body Age</div>
+<div class="flex items-baseline gap-1">
+<span class="text-lg font-bold text-white">29.90</span>
+<span class="text-[10px] text-digital-peach">(-0.05yr)</span>
+</div>
+</div>
+<div class="bg-digital-peach/5 border border-digital-peach/10 rounded-lg p-3">
+<div class="text-[10px] text-slate-400 uppercase mb-1">Lifespan Added</div>
+<div class="text-lg font-bold text-white">+0.01 <span class="text-xs font-normal">years</span></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-green-400">savings</span>
+<span class="text-sm">Future Medical Savings</span>
+</div>
+<span class="font-bold text-green-400">₹45</span>
+</div>
+</div>
+</div>
+<!-- Gamification Card -->
+<div class="liquid-glass rounded-xl p-5 relative overflow-hidden">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Your Building Grew!</h3>
+<span class="material-symbols-outlined text-electric-pulse">domain</span>
+</div>
+<div class="flex items-center justify-center py-4 bg-background-dark/50 rounded-lg border border-white/5">
+<div class="relative flex items-end gap-8">
+<!-- Before State -->
+<div class="flex flex-col items-center">
+<div class="w-16 h-20 bg-gradient-to-b from-slate-700 to-slate-800 rounded-sm relative shadow-lg">
+<div class="absolute inset-x-2 top-2 h-1 bg-white/10"></div>
+<div class="absolute inset-x-2 top-4 h-1 bg-white/10"></div>
+</div>
+<span class="text-[10px] uppercase text-slate-500 mt-2 font-bold">Before</span>
+</div>
+<!-- Arrow -->
+<div class="pb-8">
+<span class="material-symbols-outlined text-carbon-mint animate-pulse">trending_flat</span>
+</div>
+<!-- After State -->
+<div class="flex flex-col items-center">
+<div class="w-16 h-28 bg-gradient-to-b from-electric-pulse to-slate-800 rounded-sm relative shadow-[0_0_20px_rgba(0,217,255,0.2)] border-t border-electric-pulse/50">
+<div class="absolute inset-x-2 top-2 h-1 bg-white/30"></div>
+<div class="absolute inset-x-2 top-4 h-1 bg-white/20"></div>
+<div class="absolute inset-x-2 top-6 h-1 bg-white/10"></div>
+<div class="absolute -top-3 left-1/2 -translate-x-1/2">
+<span class="material-symbols-outlined text-carbon-mint text-xs">keyboard_double_arrow_up</span>
+</div>
+</div>
+<span class="text-[10px] uppercase text-carbon-mint mt-2 font-bold">Now (+3 floors)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Spacing for buttons -->
+<div class="h-12"></div>
+</main>
+<!-- Fixed Bottom Buttons -->
+<footer class="sticky bottom-0 px-6 py-6 space-y-3 bg-gradient-to-t from-background-dark via-background-dark/95 to-transparent backdrop-blur-md">
+<button class="w-full py-4 bg-gradient-to-r from-carbon-mint to-electric-pulse rounded-xl text-background-dark font-bold text-lg shadow-[0_8px_20px_rgba(0,245,160,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200">
+                Share Achievement
+            </button>
+<button class="w-full py-4 liquid-glass rounded-xl text-white font-bold text-lg border-white/20 hover:bg-white/10 active:scale-[0.98] transition-all duration-200">
+                Back to Home
+            </button>
+</footer>
+</div>
+</body></html>

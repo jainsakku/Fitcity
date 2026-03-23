@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#25d1f4",
+                        "carbon-mint": "#00F5A0",
+                        "electric-pulse": "#00D9FF",
+                        "digital-peach": "#FF6B6B",
+                        "warning-amber": "#F59E0B",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#101f22",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.5rem", // Squircle-like 24px
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .squishy-btn {
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .squishy-btn:active {
+            transform: scale(0.96);
+        }
+        .cyber-gradient-text {
+            background: linear-gradient(90deg, #00F5A0, #00D9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow-amber {
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+<!-- Top Header -->
+<header class="flex items-center justify-between p-4 bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+<button class="flex items-center justify-center size-10 rounded-xl bg-white/5 text-slate-100">
+<span class="material-symbols-outlined">close</span>
+</button>
+<h2 class="text-xl font-bold tracking-tight">FitCity</h2>
+<button class="flex items-center justify-center size-10 rounded-xl bg-white/5 text-slate-100">
+<span class="material-symbols-outlined">help</span>
+</button>
+</header>
+<!-- Warning Banner -->
+<div class="px-4 py-2">
+<div class="w-full bg-gradient-to-r from-warning-amber/20 via-warning-amber/40 to-warning-amber/20 border border-warning-amber/30 rounded-xl py-2 px-4 flex items-center justify-center gap-2 glow-amber">
+<span class="material-symbols-outlined text-warning-amber text-sm">warning</span>
+<span class="text-warning-amber text-xs font-bold uppercase tracking-widest">Streak at Risk!</span>
+</div>
+</div>
+<!-- Main Content Scrollable Area -->
+<main class="flex-1 overflow-y-auto px-4 pb-24">
+<!-- Isometric Visual Section -->
+<div class="relative w-full aspect-square max-h-[300px] flex items-center justify-center mt-4">
+<!-- Background Pulse Glow -->
+<div class="absolute inset-0 bg-digital-peach/10 blur-[60px] rounded-full animate-pulse"></div>
+<!-- Isometric Building Placeholder -->
+<div class="relative z-10 w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/10 flex items-center justify-center overflow-hidden" data-alt="Cracked isometric building with digital repair sparks">
+<div class="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_50%_50%,#00D9FF_0%,transparent_70%)]"></div>
+<!-- Visual representation of "Cracks" using SVG patterns -->
+<svg class="text-digital-peach/40" height="200" viewbox="0 0 200 200" width="200">
+<path d="M40,20 L60,80 L20,120 M140,40 L160,100 L180,160" fill="none" stroke="currentColor" stroke-width="2"></path>
+</svg>
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-6xl text-digital-peach mb-2">broken_image</span>
+<div class="h-1 w-24 bg-electric-pulse rounded-full shadow-[0_0_15px_#00D9FF] animate-bounce"></div>
+</div>
+</div>
+</div>
+<!-- Headline -->
+<div class="text-center mt-6">
+<h1 class="text-3xl font-bold leading-tight">Your 12-Day <br/>Streak broke 💔</h1>
+<div class="mt-4 inline-flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+<span class="material-symbols-outlined text-electric-pulse text-lg">timer</span>
+<span class="text-electric-pulse font-mono font-bold text-lg">46:58:12</span>
+<span class="text-slate-400 text-xs uppercase font-medium">Remaining</span>
+</div>
+</div>
+<!-- Recovery Options -->
+<div class="mt-8 space-y-4">
+<!-- Option 1: Grace Days (Used) -->
+<div class="liquid-glass p-5 rounded-2xl opacity-60 relative overflow-hidden group">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-xl bg-slate-700/50 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">calendar_today</span>
+</div>
+<div>
+<h3 class="font-bold text-slate-300">Grace Days</h3>
+<p class="text-xs text-slate-500">0 remaining this quarter</p>
+</div>
+</div>
+<div class="bg-slate-800 px-3 py-1 rounded-full border border-white/5">
+<span class="text-xs font-bold text-slate-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">close</span> Used
+                        </span>
+</div>
+</div>
+</div>
+<!-- Option 2: Streak Shield (Disabled) -->
+<div class="liquid-glass p-5 rounded-2xl opacity-80 border-dashed border-white/20">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-xl bg-slate-700/50 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">shield</span>
+</div>
+<div>
+<h3 class="font-bold text-slate-300">Streak Shield</h3>
+<p class="text-xs text-slate-500">No shield active</p>
+</div>
+</div>
+<a class="text-xs font-bold text-primary underline decoration-primary/30" href="#">Buy for 150 coins</a>
+</div>
+</div>
+<!-- Option 3: Streak Recovery (Active Highlighted) -->
+<div class="relative p-[2px] rounded-2xl bg-gradient-to-br from-warning-amber via-carbon-mint to-electric-pulse shadow-xl">
+<div class="liquid-glass bg-background-dark/90 p-5 rounded-[22px] h-full">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-xl bg-warning-amber/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-warning-amber">build</span>
+</div>
+<div>
+<h3 class="font-bold text-white text-lg leading-tight">Streak Recovery</h3>
+<p class="text-sm text-carbon-mint font-medium">Repair your streak now</p>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center mb-6">
+<div class="space-y-1">
+<p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Cost</p>
+<p class="text-warning-amber font-bold text-sm">150 coins (8-30 day streak)</p>
+</div>
+<div class="text-right space-y-1">
+<p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Balance</p>
+<p class="text-carbon-mint font-bold text-sm flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-sm">database</span> 247 coins
+                            </p>
+</div>
+</div>
+<button class="squishy-btn w-full py-4 rounded-xl bg-gradient-to-r from-warning-amber to-carbon-mint text-background-dark font-black text-lg uppercase tracking-tight shadow-lg shadow-carbon-mint/20">
+                        Recover Streak
+                    </button>
+</div>
+</div>
+</div>
+<!-- Cost Table -->
+<div class="mt-8 liquid-glass rounded-2xl p-4 overflow-hidden">
+<h4 class="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold mb-3 text-center">Recovery Tiers</h4>
+<div class="flex justify-between items-center gap-2 overflow-x-auto no-scrollbar">
+<div class="flex-1 text-center border-r border-white/5">
+<p class="text-[10px] text-slate-400">1-7d</p>
+<p class="text-xs font-bold">50</p>
+</div>
+<div class="flex-1 text-center border-r border-white/5 bg-white/5 py-1 rounded-lg">
+<p class="text-[10px] text-electric-pulse font-bold">8-30d</p>
+<p class="text-xs font-bold">150</p>
+</div>
+<div class="flex-1 text-center border-r border-white/5">
+<p class="text-[10px] text-slate-400">31-90d</p>
+<p class="text-xs font-bold">300</p>
+</div>
+<div class="flex-1 text-center border-r border-white/5">
+<p class="text-[10px] text-slate-400">91-365d</p>
+<p class="text-xs font-bold">500</p>
+</div>
+<div class="flex-1 text-center">
+<p class="text-[10px] text-slate-400">365+</p>
+<p class="text-xs font-bold">1k</p>
+</div>
+</div>
+</div>
+<!-- Secondary Actions -->
+<div class="mt-6 text-center space-y-4">
+<button class="text-slate-500 text-sm font-medium hover:text-digital-peach transition-colors">
+                Let Streak Reset
+            </button>
+<p class="text-[10px] text-slate-600 font-medium italic">
+                After 48 hours, streak resets permanently
+            </p>
+</div>
+</main>
+<!-- Bottom Navigation Component -->
+<nav class="fixed bottom-0 left-0 right-0 bg-[#1b2527]/90 backdrop-blur-lg border-t border-white/5 px-4 pb-6 pt-3 z-50">
+<div class="flex justify-between items-center max-w-md mx-auto">
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-[10px] font-medium">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<p class="text-[10px] font-medium">Workout</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-primary" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1">bolt</span>
+<span class="absolute -top-1 -right-1 size-2 bg-digital-peach rounded-full"></span>
+</div>
+<p class="text-[10px] font-medium">Streak</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">groups</span>
+<p class="text-[10px] font-medium">Social</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-[10px] font-medium">Profile</p>
+</a>
+</div>
+</nav>
+</body></html>

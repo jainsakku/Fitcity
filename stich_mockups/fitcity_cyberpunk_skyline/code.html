@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitCity - Cyberpunk Skyline</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#25d1f4",
+                        "cyber-pink": "#ff00ff",
+                        "cyber-purple": "#7000ff",
+                        "background-dark": "#050510",
+                        "cardio": "#00D9FF",
+                        "meditation": "#00F5A0",
+                        "strength": "#FF2E63",
+                        "sports": "#FFD93D",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk"]
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes scan {
+            0% { transform: rotate(-20deg); }
+            50% { transform: rotate(20deg); }
+            100% { transform: rotate(-20deg); }
+        }
+        @keyframes helicopter {
+            0% { transform: translateX(120%) translateY(0); }
+            100% { transform: translateX(-150%) translateY(20px); }
+        }
+        .glass-panel {
+            background: rgba(15, 20, 30, 0.4);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .cyber-sky {
+            background: linear-gradient(to bottom, #2b0030 0%, #7000ff 30%, #ff00ff 60%, #ff8e3c 100%);
+        }
+        .window-grid {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+            background-size: 4px 8px;
+        }
+        .reflection-layer {
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1), transparent);
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), transparent);
+        }
+        .body-age-glow {
+            text-shadow: 0 0 10px #FFD93D, 0 0 20px #FFD93D;
+        }
+        .building-glow {
+            box-shadow: 0 -10px 30px -10px currentColor;
+        }
+        .helicopter-anim {
+            animation: helicopter 15s linear infinite;
+        }
+        .searchlight {
+            animation: scan 4s ease-in-out infinite;
+            transform-origin: top center;
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display text-slate-100 overflow-hidden h-screen flex flex-col">
+<!-- Top Navigation Header -->
+<header class="fixed top-0 left-0 right-0 z-50 p-4">
+<div class="glass-panel rounded-2xl p-4">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full border-2 border-primary/50 overflow-hidden">
+<img alt="Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_AN30JXfkYBj1sEOFFE46a6exdW02wiwQpypvSZ53HoRvOwtUgqDoYbHgDM_0I0t6OMINdzgTMoujXuCNFcqwOVMh6C5hjzGKSfmTInH7B1rAIiFHKcLY2F1ObKIq90gHmlGeIAZRLxDNioYABs9O1RI9Ia9iIqgS5n6_8u-9FJUbcCxvDqocrwktpRq-WSh_kaC4R43JISKAQihboUf78-NNinjQaq2uk1MNaXrmsYog2iYP3erNYhQLt4dnZffMvqA1kBFxu_Z-"/>
+</div>
+<div>
+<h1 class="text-sm font-bold tracking-tight">Alex's Skyline</h1>
+<p class="text-[10px] text-primary font-bold uppercase tracking-widest">Level 7</p>
+</div>
+</div>
+<div class="text-right">
+<div class="flex items-center gap-1 justify-end">
+<span class="material-symbols-outlined text-primary text-sm fill-1">stars</span>
+<span class="text-sm font-bold">5,240</span>
+</div>
+<p class="text-[10px] text-slate-400 uppercase tracking-widest leading-none">Status Points</p>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="bg-white/5 border border-white/10 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-tighter">12 buildings</div>
+<div class="bg-white/5 border border-white/10 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-tighter">42 active days</div>
+<div class="bg-white/5 border border-white/10 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-tighter">Rank #127</div>
+</div>
+</div>
+</header>
+<!-- Main Skyline Visualizer -->
+<main class="flex-1 relative overflow-hidden cyber-sky">
+<!-- Distant Background Buildings (Hazy/Atmospheric) -->
+<div class="absolute inset-0 flex items-end justify-center opacity-40 px-4">
+<div class="flex items-end gap-1 w-full max-w-md h-full pb-32">
+<div class="flex-1 h-[60%] bg-[#4a0e4e] rounded-t-sm"></div>
+<div class="flex-1 h-[75%] bg-[#4a0e4e] rounded-t-sm relative">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-12 bg-[#4a0e4e]"></div>
+</div>
+<div class="flex-1 h-[65%] bg-[#4a0e4e] rounded-t-sm"></div>
+<div class="flex-1 h-[85%] bg-[#4a0e4e] rounded-t-sm"></div>
+<div class="flex-1 h-[70%] bg-[#4a0e4e] rounded-t-sm"></div>
+</div>
+</div>
+<!-- Midground Buildings -->
+<div class="absolute inset-0 flex items-end justify-center px-4 pb-20">
+<div class="flex items-end gap-2 w-full max-w-md h-full">
+<!-- Cardio Building -->
+<div class="w-12 h-[45%] bg-cardio/40 border-t-2 border-cardio/60 rounded-t-md relative building-glow text-cardio">
+<div class="absolute inset-0 window-grid opacity-30"></div>
+</div>
+<!-- Strength Building -->
+<div class="w-14 h-[60%] bg-strength/40 border-t-2 border-strength/60 rounded-t-md relative building-glow text-strength">
+<div class="absolute inset-0 window-grid opacity-30"></div>
+</div>
+<!-- Tallest Gym Building (Active/Streak) -->
+<div class="w-16 h-[85%] bg-primary/30 border-t-4 border-primary/80 rounded-t-lg relative building-glow text-primary flex flex-col items-center">
+<div class="absolute inset-0 window-grid opacity-50"></div>
+<!-- Signage -->
+<div class="z-10 mt-8 -rotate-90 whitespace-nowrap text-[10px] font-black tracking-[0.2em] bg-primary text-black px-2 py-0.5">GYM • STREAK</div>
+<!-- Floating Body Age Badge -->
+<div class="absolute -top-16 left-1/2 -translate-x-1/2 whitespace-nowrap animate-[float_3s_infinite_ease-in-out]">
+<p class="text-amber-300 font-bold text-lg body-age-glow">Body Age: 26</p>
+</div>
+<!-- Streak Fire -->
+<div class="absolute -top-6 bg-orange-500 rounded-full p-1.5 shadow-[0_0_15px_#f97316]">
+<span class="material-symbols-outlined text-white text-sm fill-1">local_fire_department</span>
+</div>
+</div>
+<!-- Wellness Building -->
+<div class="w-12 h-[50%] bg-meditation/40 border-t-2 border-meditation/60 rounded-t-md relative building-glow text-meditation">
+<div class="absolute inset-0 window-grid opacity-30"></div>
+</div>
+<!-- Sports Building (Construction) -->
+<div class="w-14 h-[40%] bg-amber-500/20 border-t-2 border-dashed border-amber-500/50 rounded-t-md relative text-amber-500 overflow-visible">
+<div class="absolute inset-0 border-x border-amber-500/20 window-grid opacity-20"></div>
+<!-- Crane -->
+<div class="absolute -top-12 left-2 w-1 h-12 bg-slate-500"></div>
+<div class="absolute -top-12 -left-4 w-16 h-1 bg-slate-500">
+<div class="absolute right-0 top-0 w-4 h-6 border-l border-b border-slate-600"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Foreground Harbor Reflection -->
+<div class="absolute bottom-0 left-0 right-0 h-32 bg-background-dark/80 backdrop-blur-sm z-20">
+<div class="absolute inset-0 reflection-layer opacity-40 scale-y-[-1] translate-y-[-100%] overflow-hidden">
+<!-- Repeating building block for reflection -->
+<div class="flex items-end gap-2 w-full justify-center px-4 h-full">
+<div class="w-12 h-[45%] bg-cardio"></div>
+<div class="w-14 h-[60%] bg-strength"></div>
+<div class="w-16 h-[85%] bg-primary"></div>
+<div class="w-12 h-[50%] bg-meditation"></div>
+<div class="w-14 h-[40%] bg-amber-500"></div>
+</div>
+</div>
+<!-- Water Ripples Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent opacity-60"></div>
+<div class="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(37,209,244,0.05)_50%,transparent_100%)] bg-[length:100%_4px]"></div>
+</div>
+<!-- Helicopter Sky Detail -->
+<div class="absolute top-24 right-0 z-30 helicopter-anim pointer-events-none">
+<div class="relative">
+<div class="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+<span class="text-[9px] font-bold text-white/80 uppercase tracking-widest">Tap to Explore ✈️</span>
+<div class="size-4 bg-slate-800 rounded-sm relative">
+<div class="absolute -top-1 -left-1 w-6 h-0.5 bg-slate-400"></div>
+</div>
+</div>
+<!-- Searchlight Beam -->
+<div class="absolute top-4 left-1/2 w-[2px] h-64 bg-gradient-to-b from-white/40 to-transparent searchlight origin-top"></div>
+</div>
+</div>
+<!-- Bottom UI Overlay -->
+<div class="absolute bottom-24 left-4 right-4 z-40">
+<div class="glass-panel p-4 rounded-2xl">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">This Week</span>
+<div class="flex items-baseline gap-1">
+<span class="text-xl font-bold text-white">5/7</span>
+<span class="text-xs text-slate-500">days</span>
+</div>
+</div>
+<div class="h-8 w-[1px] bg-white/10"></div>
+<div class="flex flex-col items-center">
+<span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Status</span>
+<span class="text-xl font-bold text-primary">+340</span>
+</div>
+<div class="h-8 w-[1px] bg-white/10"></div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Streak</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-orange-500 text-lg fill-1">local_fire_department</span>
+<span class="text-xl font-bold">12</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Tab Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-2 pointer-events-none">
+<div class="glass-panel rounded-full flex justify-between items-center px-4 py-2 border-t border-white/20 pointer-events-auto shadow-[0_-10px_40px_-10px_rgba(37,209,244,0.3)]">
+<a class="flex flex-col items-center p-2 text-slate-500" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[9px] font-bold mt-0.5">Home</span>
+</a>
+<a class="flex flex-col items-center p-2 text-primary relative group" href="#">
+<!-- Active Glow Effect -->
+<div class="absolute inset-0 bg-primary/20 blur-xl rounded-full scale-150"></div>
+<span class="material-symbols-outlined fill-1 z-10">location_city</span>
+<span class="text-[9px] font-bold mt-0.5 z-10">Skyline</span>
+<div class="absolute -bottom-1 w-4 h-1 bg-primary rounded-full"></div>
+</a>
+<a class="flex flex-col items-center p-2 text-slate-500" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-[9px] font-bold mt-0.5">Tasks</span>
+</a>
+<a class="flex flex-col items-center p-2 text-slate-500" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-[9px] font-bold mt-0.5">Rank</span>
+</a>
+<a class="flex flex-col items-center p-2 text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[9px] font-bold mt-0.5">Profile</span>
+</a>
+</div>
+</nav>
+<!-- Atmospheric Particle Layer -->
+<div class="fixed inset-0 pointer-events-none z-[5] opacity-20">
+<div class="absolute top-1/2 left-1/4 w-1 h-1 bg-white rounded-full blur-[1px]"></div>
+<div class="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-primary rounded-full blur-[2px]"></div>
+<div class="absolute bottom-1/4 left-1/2 w-1 h-1 bg-cyber-pink rounded-full blur-[1px]"></div>
+</div>
+</body></html>

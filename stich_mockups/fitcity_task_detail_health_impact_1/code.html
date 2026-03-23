@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#25d1f4",
+                        "mint": "#00F5A0",
+                        "pulse": "#00D9FF",
+                        "peach": "#FF6B6B",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0a1112",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.25rem",
+                        "squircle": "24px",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .thermal-glow-green {
+            text-shadow: 0 0 15px rgba(0, 245, 160, 0.5);
+        }
+        .thermal-glow-gold {
+            text-shadow: 0 0 15px rgba(255, 179, 0, 0.5);
+        }
+        .squishy-btn:active {
+            transform: scale(0.96) translateY(2px);
+        }
+        .cyber-gradient-text {
+            background: linear-gradient(90deg, #00F5A0, #00D9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen pb-32">
+<!-- Header Section -->
+<header class="sticky top-0 z-50 glass-panel border-b border-white/5 px-4 py-4 flex items-center justify-between">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<div class="flex-1 text-center">
+<h1 class="text-lg font-bold tracking-tight">Gym Workout — 1hr</h1>
+<div class="flex justify-center gap-0.5 mt-0.5">
+<span class="material-symbols-outlined text-primary text-sm font-fill">star</span>
+<span class="material-symbols-outlined text-primary text-sm font-fill">star</span>
+<span class="material-symbols-outlined text-primary text-sm font-fill">star</span>
+<span class="material-symbols-outlined text-primary text-sm font-fill">star</span>
+<span class="material-symbols-outlined text-slate-500 text-sm">star</span>
+</div>
+</div>
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-white/10">
+<span class="material-symbols-outlined text-2xl">more_vert</span>
+</button>
+</header>
+<main class="max-w-lg mx-auto p-4 space-y-6">
+<!-- Stats Badges -->
+<div class="flex gap-3 overflow-x-auto no-scrollbar">
+<div class="flex items-center gap-2 px-4 py-2 rounded-full glass-panel border-mint/20 shrink-0">
+<span class="text-lg">🔥</span>
+<span class="text-sm font-medium">12 Day Streak</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-full glass-panel border-pulse/20 shrink-0">
+<span class="material-symbols-outlined text-pulse text-lg">calendar_today</span>
+<span class="text-sm font-medium">5x/week</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-full glass-panel border-peach/20 shrink-0">
+<span class="material-symbols-outlined text-peach text-lg">shield</span>
+<span class="text-sm font-medium">2 Grace Days</span>
+</div>
+</div>
+<!-- Health Impact Preview Card -->
+<section class="glass-panel rounded-squircle p-6 shadow-2xl relative overflow-hidden">
+<div class="absolute -top-24 -right-24 size-48 bg-primary/10 rounded-full blur-[80px]"></div>
+<div class="absolute -bottom-24 -left-24 size-48 bg-mint/10 rounded-full blur-[80px]"></div>
+<div class="relative z-10">
+<h2 class="text-xs font-bold tracking-[0.2em] text-slate-400 mb-1">HEALTH IMPACT PREVIEW</h2>
+<p class="text-slate-100 font-medium mb-6">If you complete this today:</p>
+<div class="grid grid-cols-2 gap-4">
+<!-- Body Age -->
+<div class="p-4 rounded-2xl bg-white/5 border border-white/5">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-mint text-xl">genetics</span>
+<span class="text-xs text-slate-400">Body Age</span>
+</div>
+<div class="text-xl font-bold text-mint thermal-glow-green">-0.05 years</div>
+</div>
+<!-- Lifespan -->
+<div class="p-4 rounded-2xl bg-white/5 border border-white/5">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-amber-400 text-xl">hourglass_empty</span>
+<span class="text-xs text-slate-400">Lifespan</span>
+</div>
+<div class="text-xl font-bold text-amber-400 thermal-glow-gold">+0.01 years</div>
+</div>
+<!-- Heart Risk Progress -->
+<div class="col-span-2 p-4 rounded-2xl bg-white/5 border border-white/5">
+<div class="flex justify-between items-center mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-peach text-xl">favorite</span>
+<span class="text-xs text-slate-400">Heart Disease Risk</span>
+</div>
+<span class="text-sm font-bold text-mint">-0.3%</span>
+</div>
+<div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-peach via-primary to-mint w-[65%] rounded-full"></div>
+</div>
+</div>
+<!-- Money & Energy -->
+<div class="flex flex-col gap-4">
+<div class="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center gap-3">
+<div class="size-8 rounded-lg bg-mint/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-mint text-lg">currency_rupee</span>
+</div>
+<div>
+<p class="text-[10px] text-slate-400 uppercase leading-none mb-1">Saved</p>
+<p class="font-bold text-sm">₹45 today</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center gap-3">
+<div class="size-8 rounded-lg bg-pulse/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-pulse text-lg">bolt</span>
+</div>
+<div>
+<p class="text-[10px] text-slate-400 uppercase leading-none mb-1">Energy</p>
+<p class="font-bold text-sm text-pulse">+20% tomorrow</p>
+</div>
+</div>
+</div>
+<!-- Lean Mass -->
+<div class="col-span-2 p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">fitness_center</span>
+<span class="text-sm">Lean Mass Impact</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="text-sm font-bold text-mint">+0.02kg</span>
+<span class="material-symbols-outlined text-mint text-sm">trending_up</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Rewards Breakdown Card -->
+<div class="glass-panel rounded-squircle p-6">
+<div class="flex items-start justify-between mb-4">
+<div>
+<h3 class="font-bold text-lg leading-none">Earnings potential</h3>
+<p class="text-sm text-slate-400 mt-1">Status earned: +73 • Coins: +7</p>
+</div>
+<div class="bg-primary/20 p-2 rounded-xl">
+<span class="material-symbols-outlined text-primary">token</span>
+</div>
+</div>
+<div class="flex items-center gap-2 py-3 border-t border-white/5 text-xs text-slate-400 font-medium">
+<span class="bg-white/10 px-2 py-1 rounded">Base 4★</span>
+<span>×</span>
+<span class="bg-white/10 px-2 py-1 rounded">Freq 1.3</span>
+<span>×</span>
+<span class="bg-white/10 px-2 py-1 rounded">Streak 1.4</span>
+</div>
+</div>
+<!-- Streak Protection Info -->
+<div class="flex items-center justify-between px-2 text-sm">
+<div class="flex items-center gap-2">
+<span class="text-base">🛡️</span>
+<span class="text-slate-400">Streak Protection Active</span>
+</div>
+<span class="text-primary font-medium">2 Grace Days remaining</span>
+</div>
+</main>
+<!-- Bottom Actions & Nav -->
+<div class="fixed bottom-0 left-0 right-0 z-50 p-4 pt-8 bg-gradient-to-t from-background-dark via-background-dark/90 to-transparent">
+<div class="max-w-lg mx-auto space-y-4">
+<button class="squishy-btn w-full h-16 rounded-squircle bg-gradient-to-r from-mint via-pulse to-primary text-slate-950 font-bold text-lg shadow-[0_8px_32px_rgba(0,245,160,0.3)] flex items-center justify-center gap-2 transition-transform duration-200">
+<span class="material-symbols-outlined font-fill">play_arrow</span>
+                Start Workout
+            </button>
+<button class="w-full py-2 text-slate-400 text-sm font-medium hover:text-white transition-colors">
+                Log as Completed
+            </button>
+</div>
+<!-- Nav Bar -->
+<nav class="max-w-md mx-auto flex items-center justify-around mt-4 pt-2 border-t border-white/5">
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="text-[10px] font-medium">Dashboard</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined font-fill">fitness_center</span>
+<span class="text-[10px] font-medium">Workouts</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="text-[10px] font-medium">Impact</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>

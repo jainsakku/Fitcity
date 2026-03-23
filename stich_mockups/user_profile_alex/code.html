@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitCity - Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00F5A0",
+                        "secondary": "#00D9FF",
+                        "accent": "#FF6B6B",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0a1112",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .cyber-gradient-text {
+            background: linear-gradient(90deg, #00F5A0 0%, #00D9FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .cyber-glow {
+            box-shadow: 0 0 15px rgba(0, 245, 160, 0.3);
+        }
+        .squircle {
+            border-radius: 24px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen pb-24">
+<!-- Top Navigation Header -->
+<header class="flex items-center justify-between p-6 sticky top-0 z-50 bg-background-dark/80 backdrop-blur-md">
+<h1 class="text-2xl font-bold tracking-tight cyber-gradient-text">FitCity</h1>
+<button class="w-10 h-10 flex items-center justify-center liquid-glass rounded-xl text-slate-100">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<main class="px-4 space-y-6">
+<!-- Profile Hero Section -->
+<section class="flex flex-col items-center text-center space-y-4 pt-4">
+<div class="relative">
+<div class="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-primary via-secondary to-accent cyber-glow">
+<div class="w-full h-full rounded-full bg-background-dark flex items-center justify-center overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="Stylized fitness character 3D avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-C-g7jk_NCehzu_5j0D1n7sSe4bYNoVwJd5yp3gZsSmzJMYu7oO9j-jwzYkWlSfNCKI4RNMw-YXetLudqT2Vo2fo5HCnvkBw59Zz2o_FhClAHqkbvQ7VDzhwyAvYTRlSy2Ftq-EVr37uF2gxLogxcmBzhYWiUNmtPIotXjOzIr8oW-oTYiFOQihRcIH0jGvcMQ1mwf2ta6rJ0fDsd1Q59GPViyhpbZIvtFSmZ1z2gPMuZc98Y80TxpzJAIw8JOTGDq3kmGL2Ky4c-"/>
+</div>
+</div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-background-dark text-xs font-bold px-3 py-1 rounded-full border-2 border-background-dark">
+                    LEVEL 7
+                </div>
+</div>
+<div class="space-y-1">
+<h2 class="text-3xl font-bold tracking-tight">Alex</h2>
+<p class="text-secondary font-medium tracking-wide">Fitness Explorer</p>
+<div class="flex items-center justify-center gap-1 text-slate-400 text-sm mt-1">
+<span>Fitness Era: Getting Serious</span>
+<span class="text-lg">💪</span>
+</div>
+</div>
+</section>
+<!-- Level & Progress -->
+<section class="liquid-glass squircle p-5 space-y-3">
+<div class="flex justify-between items-end">
+<div class="space-y-1">
+<span class="text-xs text-slate-400 uppercase tracking-widest">Experience Points</span>
+<div class="text-lg font-bold">5,240 <span class="text-slate-500 font-normal">/ 5,000</span></div>
+</div>
+<div class="text-xs text-primary font-medium flex items-center gap-1">
+                    Next: Level 8 <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+<div class="h-3 w-full bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-secondary rounded-full" style="width: 95%"></div>
+</div>
+</section>
+<!-- Quick Stats Chips -->
+<section class="grid grid-cols-2 gap-3">
+<div class="liquid-glass squircle p-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">emoji_events</span>
+</div>
+<div>
+<p class="text-[10px] text-slate-400 uppercase font-bold tracking-tighter">Status</p>
+<p class="text-lg font-bold">5,240</p>
+</div>
+</div>
+<div class="liquid-glass squircle p-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center text-accent">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div>
+<p class="text-[10px] text-slate-400 uppercase font-bold tracking-tighter">Coins</p>
+<p class="text-lg font-bold">247</p>
+</div>
+</div>
+</section>
+<!-- Stats Bento Grid -->
+<section class="grid grid-cols-6 grid-rows-3 gap-3 h-[480px]">
+<!-- Card 1: Streak -->
+<div class="col-span-3 row-span-1 liquid-glass squircle p-4 flex flex-col justify-between overflow-hidden relative">
+<span class="text-xs text-slate-400 font-medium">Current Streak</span>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-bold">12</span>
+<span class="text-xs text-slate-400">Days</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-8 opacity-40 bg-gradient-to-t from-primary/40 to-transparent"></div>
+<div class="absolute right-3 top-3 text-orange-400">
+<span class="material-symbols-outlined fill-1">local_fire_department</span>
+</div>
+</div>
+<!-- Card 2: Body Age -->
+<div class="col-span-3 row-span-1 liquid-glass squircle p-4 flex flex-col justify-between">
+<span class="text-xs text-slate-400 font-medium">Body Age</span>
+<div class="flex items-center gap-2">
+<span class="text-2xl font-bold">26</span>
+<div class="bg-primary/20 text-primary text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center">
+<span class="material-symbols-outlined text-xs">arrow_downward</span> -4y
+                    </div>
+</div>
+<p class="text-[10px] text-slate-500">Real: 30 years</p>
+</div>
+<!-- Card 3: Lifespan -->
+<div class="col-span-4 row-span-1 bg-gradient-to-br from-secondary/20 to-primary/20 border border-white/10 squircle p-4 flex flex-col justify-center">
+<span class="text-xs text-slate-300 font-medium">Lifespan Added</span>
+<div class="text-3xl font-bold cyber-gradient-text">+0.8 <span class="text-sm font-medium">years</span></div>
+</div>
+<!-- Card 6: Rank -->
+<div class="col-span-2 row-span-1 liquid-glass squircle p-4 flex flex-col items-center justify-center">
+<span class="text-[10px] text-slate-400 uppercase font-bold">Global Rank</span>
+<div class="text-xl font-bold mt-1">#127</div>
+<span class="material-symbols-outlined text-secondary mt-1">public</span>
+</div>
+<!-- Card 4: Money Saved -->
+<div class="col-span-3 row-span-1 liquid-glass squircle p-4 flex flex-col justify-between">
+<span class="text-xs text-slate-400 font-medium">Money Saved</span>
+<div class="text-xl font-bold">₹12,000<span class="text-xs text-slate-400 font-normal">/yr</span></div>
+<div class="h-1 w-full bg-white/5 rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-accent w-2/3"></div>
+</div>
+</div>
+<!-- Card 5: Total Workouts -->
+<div class="col-span-3 row-span-1 liquid-glass squircle p-4 flex flex-col justify-between">
+<span class="text-xs text-slate-400 font-medium">Total Workouts</span>
+<div class="flex items-center justify-between">
+<span class="text-2xl font-bold">142</span>
+<div class="grid grid-cols-4 gap-0.5">
+<div class="w-2 h-2 rounded-sm bg-primary"></div>
+<div class="w-2 h-2 rounded-sm bg-primary/20"></div>
+<div class="w-2 h-2 rounded-sm bg-primary/60"></div>
+<div class="w-2 h-2 rounded-sm bg-primary"></div>
+<div class="w-2 h-2 rounded-sm bg-primary/40"></div>
+<div class="w-2 h-2 rounded-sm bg-primary"></div>
+<div class="w-2 h-2 rounded-sm bg-primary/20"></div>
+<div class="w-2 h-2 rounded-sm bg-primary/60"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Achievements Horizontal Scroll -->
+<section class="space-y-4">
+<div class="flex justify-between items-center px-2">
+<h3 class="text-lg font-bold">Achievements</h3>
+<button class="text-primary text-sm font-medium">View All</button>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+<div class="flex-shrink-0 w-24 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-3xl">local_fire_department</span>
+</div>
+<span class="text-[10px] font-medium text-center leading-tight">7-Day Streak</span>
+</div>
+<div class="flex-shrink-0 w-24 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-3xl">workspace_premium</span>
+</div>
+<span class="text-[10px] font-medium text-center leading-tight">30-Day Streak</span>
+</div>
+<div class="flex-shrink-0 w-24 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-3xl">fitness_center</span>
+</div>
+<span class="text-[10px] font-medium text-center leading-tight">50 Workouts</span>
+</div>
+<div class="flex-shrink-0 w-24 flex flex-col items-center gap-2 grayscale opacity-40">
+<div class="w-20 h-20 rounded-2xl liquid-glass border-dashed border-2 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-3xl">group</span>
+</div>
+<span class="text-[10px] font-medium text-center leading-tight">Buddy Workout</span>
+</div>
+</div>
+</section>
+<!-- Neighborhoods -->
+<section class="space-y-4">
+<h3 class="text-lg font-bold px-2">Neighborhoods</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="liquid-glass squircle p-4 space-y-3 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-10">
+<span class="material-symbols-outlined text-5xl">home_work</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center">
+<span class="material-symbols-outlined text-white">diversity_3</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Bandra Crew</h4>
+<p class="text-[10px] text-slate-400">1.2k Active Users</p>
+</div>
+<button class="w-full py-2 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-bold transition-colors">ENTER</button>
+</div>
+<div class="liquid-glass squircle p-4 space-y-3 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-10">
+<span class="material-symbols-outlined text-5xl">exercise</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-red-500 flex items-center justify-center">
+<span class="material-symbols-outlined text-white">bolt</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Iron Nation</h4>
+<p class="text-[10px] text-slate-400">850 Power Lifters</p>
+</div>
+<button class="w-full py-2 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-bold transition-colors">ENTER</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-background-dark/90 backdrop-blur-xl border-t border-white/5 px-6 pb-6 pt-3 flex items-center justify-between z-50">
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-[10px] font-medium">Skyline</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-[10px] font-medium">Tasks</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-[10px] font-medium">Rankings</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary relative" href="#">
+<span class="material-symbols-outlined fill-1">person</span>
+<span class="text-[10px] font-bold">Profile</span>
+<div class="absolute -top-1 w-1 h-1 bg-primary rounded-full cyber-glow"></div>
+</a>
+</nav>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .fill-1 {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</body></html>

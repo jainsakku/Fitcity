@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitCity - Coin Shop</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#25d1f4",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#101f22",
+                        "mint": "#00F5A0",
+                        "electric": "#00D9FF",
+                        "peach": "#FF6B6B",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.25rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .cyber-gradient-text {
+            background: linear-gradient(90deg, #00D9FF, #00F5A0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .cyber-gradient-bg {
+            background: linear-gradient(135deg, #00D9FF, #00F5A0);
+        }
+        .squishy-btn {
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .squishy-btn:active {
+            transform: scale(0.94);
+        }
+        .bento-card {
+            border-radius: 24px; /* Large squircle feel */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+<!-- Header Section -->
+<header class="sticky top-0 z-50 px-6 py-6 flex items-center justify-between bg-background-dark/80 backdrop-blur-md">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-xl liquid-glass squishy-btn">
+<span class="material-symbols-outlined text-white">arrow_back_ios_new</span>
+</button>
+<h1 class="text-2xl font-bold tracking-tight text-white">Coin Shop</h1>
+</div>
+<div class="liquid-glass px-4 py-2 rounded-2xl flex items-center gap-2 border-primary/20">
+<span class="text-lg">💰</span>
+<span class="font-bold text-white tracking-wide">247</span>
+<span class="text-xs font-semibold text-primary uppercase">Coins</span>
+</div>
+</header>
+<!-- Categories Horizontal Scroll -->
+<nav class="px-6 py-2 overflow-x-auto no-scrollbar flex gap-3 whitespace-nowrap">
+<button class="cyber-gradient-bg px-5 py-2.5 rounded-2xl text-slate-900 font-bold text-sm shadow-[0_0_20px_rgba(0,217,255,0.3)] squishy-btn">
+            🏗️ Building Skins
+        </button>
+<button class="liquid-glass px-5 py-2.5 rounded-2xl text-slate-300 font-medium text-sm squishy-btn">
+            🎨 Color Themes
+        </button>
+<button class="liquid-glass px-5 py-2.5 rounded-2xl text-slate-300 font-medium text-sm squishy-btn">
+            ✨ Effects
+        </button>
+<button class="liquid-glass px-5 py-2.5 rounded-2xl text-slate-300 font-medium text-sm squishy-btn">
+            👤 Character
+        </button>
+<button class="liquid-glass px-5 py-2.5 rounded-2xl text-slate-300 font-medium text-sm squishy-btn">
+            🛡️ Boosters
+        </button>
+</nav>
+<!-- Bento Grid 2.0 Product Display -->
+<main class="flex-1 px-6 py-6 grid grid-cols-2 gap-4">
+<!-- Neo Tokyo -->
+<div class="liquid-glass bento-card p-4 flex flex-col gap-4 border-white/5">
+<div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-800">
+<img class="w-full h-full object-cover" data-alt="Neo Tokyo isometric japanese cyberpunk building" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2qEHFtJOkNqL2NcnpKr7StTEvl0Qc65_ciI9NXI52cksmyyv2JMk3i03pET981eN55WoJiHa88kjqJl-k3e6gUjMLrlcc0ywyQCeHkWWecdtBP8p8IunjWdpytHLSZ8d3LbLLigANz2qFatS8kB7rw5J6HKcwfGl4CN-Jt6dapDQckq9CrvCpmsV1rpXrNFmN1XvXjc5215EFY9Ysfen4p2X6TzpoC_c0iHeqYFrQ6cMmNk-b_XS8tqwZxSC2h5gLsRfkABy5c3qn"/>
+<div class="absolute top-2 right-2 px-2 py-1 rounded-lg bg-black/40 backdrop-blur-sm text-[10px] font-bold text-mint uppercase tracking-widest">Rare</div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-base font-bold text-white leading-tight">Neo Tokyo</h3>
+<div class="flex items-center gap-1">
+<span class="text-sm">💰</span>
+<span class="text-sm font-semibold text-slate-300">150</span>
+</div>
+</div>
+<button class="cyber-gradient-bg w-full py-3 rounded-xl text-slate-900 font-bold text-sm squishy-btn shadow-lg">Buy Now</button>
+</div>
+<!-- Art Deco -->
+<div class="liquid-glass bento-card p-4 flex flex-col gap-4 border-white/5">
+<div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-800">
+<img class="w-full h-full object-cover" data-alt="Classic Art Deco gold and black building" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpwthyK-bcN-cgjQ6AL45aVRD1pUjjmLun_rTvogiq68VCMPD27EiqAlEJ4EAh0jSbLOoL8BJb43A_Tq4iSJ6L4rneeNr7XX4JE2ogtZiMUmnljL4Ztj1XThkRaDAx_CaT0IvE0CvK5iC5nvmPFTAgkpVMKLEM4iI2dtt2x8p5kaeOCEYm5569uWTigkEyaXf1h-LdbtzHBhJK1ifedBtGlGlIHhDGUpioQqsU4KgXjjPpRBHLTobZYiBW4f2PPQFua04psWzS1cTr"/>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-base font-bold text-white leading-tight">Art Deco</h3>
+<div class="flex items-center gap-1">
+<span class="text-sm">💰</span>
+<span class="text-sm font-semibold text-slate-300">120</span>
+</div>
+</div>
+<button class="cyber-gradient-bg w-full py-3 rounded-xl text-slate-900 font-bold text-sm squishy-btn shadow-lg">Buy Now</button>
+</div>
+<!-- Crystal Tower -->
+<div class="liquid-glass bento-card p-4 flex flex-col gap-4 border-white/5">
+<div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-800">
+<img class="w-full h-full object-cover" data-alt="Futuristic glass and crystal skyscraper" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8EhDTzms5RqpnJ5lWsHiodUFiIGHiJfMqLtojFL3CNvZyYGpx-gFCRCIqOeIIq0G94461OJgXvrlICq2GTbGRNUGal1vVDgRoXuHj-0pXAvfSw7UFuRIdBtOFa_3Q1FCv8DPRQHOintfpRgoOoMQ7XpcsqB5iCBNdvprNAw-Uzl9L0K21sLBfEzTFo8xr9HbGaCW4xOrFN_tQ2RsGs95f_DfwYRGbecZ5doCg_HqJF39JbgFaqlr21i6ka6tDNQ--wzTk4lihkQGk"/>
+<div class="absolute top-2 right-2 px-2 py-1 rounded-lg bg-black/40 backdrop-blur-sm text-[10px] font-bold text-electric uppercase tracking-widest">Elite</div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-base font-bold text-white leading-tight">Crystal Tower</h3>
+<div class="flex items-center gap-1">
+<span class="text-sm">💰</span>
+<span class="text-sm font-semibold text-slate-300">200</span>
+</div>
+</div>
+<button class="cyber-gradient-bg w-full py-3 rounded-xl text-slate-900 font-bold text-sm squishy-btn shadow-lg">Buy Now</button>
+</div>
+<!-- Zen Garden -->
+<div class="liquid-glass bento-card p-4 flex flex-col gap-4 border-white/5">
+<div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-800">
+<img class="w-full h-full object-cover" data-alt="Traditional Japanese garden with koi pond and building" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCinsQW60j3g1TXgPFOsI3ObfRAO3uj4wpiPJe7I9-DdtXgMHRoh4PHbs5ugMVwM77Ww0GINbPn77d5kTW8tLwhY5QFhMbWzASJiRY-GqQ6jxcfID4iTTPYXNsybX5DLB6CH32-J79CqohKCAyabSfm4U9M0NVvYrGT3av7me6V_MN2fDuE3jgPAyKtsBADXoGB6O7OmtQIwTZSxAGpNrqqkfEI5CCniTpT7HL3fPOpnIYbWr5tfgcwV623gRXPnl81-WHqNgICVIgn"/>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-base font-bold text-white leading-tight">Zen Garden</h3>
+<div class="flex items-center gap-1">
+<span class="text-sm">💰</span>
+<span class="text-sm font-semibold text-slate-300">100</span>
+</div>
+</div>
+<button class="cyber-gradient-bg w-full py-3 rounded-xl text-slate-900 font-bold text-sm squishy-btn shadow-lg">Buy Now</button>
+</div>
+<!-- Neon Dreams -->
+<div class="liquid-glass bento-card p-4 flex flex-col gap-4 border-white/5">
+<div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-800">
+<img class="w-full h-full object-cover" data-alt="Cyberpunk glowing neon building at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9YiNEVHVyhBCfbpAqBSWwgFn5W79zFVRk1uER9UtqNcAADVH1W_FK8tDrmY3PIc2GJMAG4k7gwxvpoB3uOBwNl1FkqzgKjLCBtSZsZb8Kkn4LkzzGgx49KhP5F7052tNby8ZiydDaxG6DvuHhgPGKvurW-xgckiHOod-E-m1cZXacJzTwL5f5-mqoWG3P6p40tuxOiCWDWb6YjVGsBGbtP0-mgh15RrSsquLFFx3Ss2-B9h_hMTfJVZNlid3kzlH7HtSNBy6qNnvo"/>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-base font-bold text-white leading-tight">Neon Dreams</h3>
+<div class="flex items-center gap-1">
+<span class="text-sm">💰</span>
+<span class="text-sm font-semibold text-slate-300">180</span>
+</div>
+</div>
+<button class="cyber-gradient-bg w-full py-3 rounded-xl text-slate-900 font-bold text-sm squishy-btn shadow-lg">Buy Now</button>
+</div>
+<!-- Eco Paradise -->
+<div class="liquid-glass bento-card p-4 flex flex-col gap-4 border-white/5">
+<div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-800">
+<img class="w-full h-full object-cover" data-alt="Sustainable green building with lush vertical gardens" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByzd4HU5yxWPndIA_-MuQwIj4bkl_CHcKpIFenLiB8q_7Dwy4DNevX3dW0PxJIzL36kWmcwN0aD3KK3L--bJ6FX7GwHDR-wXjb3uJILpWx8NIX9RRpw_zo7-sofpz84wlvF1FlopYGFUPVqr5ly8xZ-iZAJw38I89_N29D23sYiKuZf3DoGcqVzg4VQF9aUiia7iWJvujgQlf0wzuk1cytLBothBy4wT1-z7Qh8JWkfCa2P30v-msYvAd0OOW_6v5_RHw2vlAvagMz"/>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-base font-bold text-white leading-tight">Eco Paradise</h3>
+<div class="flex items-center gap-1">
+<span class="text-sm">💰</span>
+<span class="text-sm font-semibold text-slate-300">80</span>
+</div>
+</div>
+<button class="cyber-gradient-bg w-full py-3 rounded-xl text-slate-900 font-bold text-sm squishy-btn shadow-lg">Buy Now</button>
+</div>
+</main>
+<!-- Earn More Coins Link -->
+<div class="w-full flex justify-center py-6">
+<a class="text-mint font-bold text-sm flex items-center gap-2 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined text-base">monetization_on</span>
+            Earn More Coins
+        </a>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="sticky bottom-0 w-full liquid-glass border-t border-white/10 px-6 py-3 pb-6 flex justify-between items-end bg-background-dark/90">
+<a class="flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">home</span>
+<span class="text-[10px] text-slate-400 font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">domain</span>
+<span class="text-[10px] text-slate-400 font-medium">Skyline</span>
+</a>
+<a class="flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">task_alt</span>
+<span class="text-[10px] text-slate-400 font-medium">Tasks</span>
+</a>
+<a class="flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">leaderboard</span>
+<span class="text-[10px] text-slate-400 font-medium">Leaderboard</span>
+</a>
+<a class="flex flex-col items-center gap-1" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-white fill-1">person</span>
+<div class="absolute -top-1 -right-1 w-2 h-2 bg-peach rounded-full border border-background-dark"></div>
+</div>
+<span class="text-[10px] text-white font-bold">Profile</span>
+</a>
+</nav>
+</body></html>
