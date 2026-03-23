@@ -1,0 +1,872 @@
+# FitCity — Backend Architecture
+
+> **Stack**: Supabase (PostgreSQL) + Upstash Redis + Firebase Auth/FCM + Supabase Edge Functions (TypeScript)
+
+---
+
+## 1. System Architecture
+
+```mermaid
+graph TB
+    subgraph "Client Apps"
+        F[Flutter UI — Dart]
+        U[Unity 3D — C#]
+    end
+
+    subgraph "Auth"
+        FA[Firebase Auth]
+    end
+
+    subgraph "Supabase"
+        PG[(PostgreSQL)]
+        RT[Realtime — WebSocket]
+        PR[PostgREST — Auto API]
+        EF[Edge Functions — Deno/TS]
+        ST[Storage — S3-compatible]
+        CR[pg_cron — Scheduled Jobs]
+    end
+
+    subgraph "Cache"
+        RD[(Upstash Redis)]
+    end
+
+    subgraph "Notifications"
+        FCM[Firebase Cloud Messaging]
+    end
+
+    F --> FA
+    F --> PR
+    F --> RT
+    F --> EF
+    F --> ST
+    U -->|REST| PR
+    EF --> PG
+    EF --> RD
+    EF --> FCM
+    CR --> PG
+    PR --> PG
+    RT --> PG
+```
+
+### Data Flow Patterns
+
+| Pattern | Used For | Path |
+|---|---|---|
+| **Direct query** | Read tasks, profile, achievements | Flutter → PostgREST → PostgreSQL |
+| **Realtime subscription** | Streak updates, raid boss progress | Flutter → Supabase Realtime → PostgreSQL NOTIFY |
+| **Edge Function** | Task completion, coin transactions, streak recovery | Flutter → Edge Function → PostgreSQL + Redis |
+| **Redis read** | Leaderboard top 50, user rank | Flutter → Edge Function → Redis |
+| **Cron job** | Midnight streak check, weekly leaderboard | pg_cron → PostgreSQL + Redis |
+| **Unity REST** | Load city building data for nearby users | Unity → PostgREST → PostgreSQL |
+
+---
+
+## 2. PostgreSQL Schema
+
+### 2.1 Core Tables
+
+```sql
+--=============================================================
+-- USERS
+--=============================================================
+CREATE TABLE users (
+  uid            TEXT PRIMARY KEY,                  -- Firebase Auth UID
+  name           TEXT NOT NULL CHECK (char_length(name) BETWEEN 3 AND 20),
+  title          TEXT DEFAULT 'Newcomer',
+  archetype      TEXT CHECK (archetype IN ('fresh_start','serious','beast_mode','elite')),
+  avatar_config  JSONB DEFAULT '{}',                -- { hair_id, skin_id, outfit_id }
+  
+  -- Economy
+  status_total   INTEGER DEFAULT 0 CHECK (status_total >= 0),
+  coins          INTEGER DEFAULT 0 CHECK (coins >= 0),
+  level          INTEGER DEFAULT 1,
+  
+  -- Health metrics  
+  body_age       DECIMAL(4,1),
+  real_age       INTEGER,
+  lifespan_added DECIMAL(8,4) DEFAULT 0,
+  
+  -- City world position
+  city_plot_x    INTEGER,
+  city_plot_y    INTEGER,
+  district_name  TEXT,
+  
+  created_at     TIMESTAMPTZ DEFAULT NOW(),
+  updated_at     TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_users_status ON users(status_total DESC);
+CREATE INDEX idx_users_city_plot ON users(city_plot_x, city_plot_y);
+
+-- Auto-update timestamp trigger
+CREATE OR REPLACE FUNCTION update_modified_column()
+RETURNS TRIGGER AS $$
+BEGIN NEW.updated_at = NOW(); RETURN NEW; END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER users_updated_at 
+  BEFORE UPDATE ON users 
+  FOR EACH ROW EXECUTE FUNCTION update_modified_column();
+
+-- Level sync trigger
+CREATE OR REPLACE FUNCTION compute_level(status INTEGER) RETURNS INTEGER AS $$
+BEGIN
+  RETURN CASE
+    WHEN status < 500    THEN 1   WHEN status < 1000   THEN 2
+    WHEN status < 2000   THEN 3   WHEN status < 3500   THEN 4
+    WHEN status < 5000   THEN 5   WHEN status < 7500   THEN 6
+    WHEN status < 10000  THEN 7   WHEN status < 12500  THEN 8
+    WHEN status < 15000  THEN 9   WHEN status < 20000  THEN 10
+    WHEN status < 30000  THEN 12  WHEN status < 50000  THEN 15
+    WHEN status < 100000 THEN 20  WHEN status < 250000 THEN 25
+    ELSE 30
+  END;
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION sync_user_level() RETURNS TRIGGER AS $$
+BEGIN NEW.level := compute_level(NEW.status_total); RETURN NEW; END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_sync_level
+  BEFORE INSERT OR UPDATE OF status_total ON users
+  FOR EACH ROW EXECUTE FUNCTION sync_user_level();
+
+--=============================================================
+-- TASK CATALOG (pre-curated, read-only for v1)
+--=============================================================
+CREATE TABLE task_catalog (
+  id              TEXT PRIMARY KEY,                  -- 'gym_workout_1hr'
+  name            TEXT NOT NULL,                     -- 'Gym Workout — 1hr'
+  category        TEXT NOT NULL CHECK (category IN ('cardio','strength','wellness','sports')),
+  emoji           TEXT,
+  base_difficulty DECIMAL(2,1) NOT NULL,             -- 1.0 to 5.0
+  duration_min    INTEGER,
+  description     TEXT,
+  
+  -- Health impact lookup (WHO/AHA based)
+  body_age_impact      DECIMAL(4,2),
+  disease_risk_heart   DECIMAL(4,2),
+  disease_risk_diabetes DECIMAL(4,2),
+  disease_risk_stroke  DECIMAL(4,2),
+  lifespan_impact      DECIMAL(6,4),
+  calories_burned      INTEGER,
+  money_saved_daily    DECIMAL(6,2),
+  energy_boost_pct     DECIMAL(4,1)
+);
+
+--=============================================================
+-- USER TASKS (user's committed tasks)
+--=============================================================
+CREATE TABLE user_tasks (
+  id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id              TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+  task_catalog_id      TEXT NOT NULL REFERENCES task_catalog(id),
+  frequency            INTEGER NOT NULL DEFAULT 3 CHECK (frequency BETWEEN 1 AND 7),
+  frequency_multiplier DECIMAL(3,2),
+  effective_difficulty  DECIMAL(4,2),
+  building_skin        TEXT DEFAULT 'default',
+  is_active            BOOLEAN DEFAULT TRUE,
+  created_at           TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_user_tasks_user ON user_tasks(user_id) WHERE is_active = TRUE;
+
+-- Auto-compute difficulty on insert/update
+CREATE OR REPLACE FUNCTION compute_task_difficulty() RETURNS TRIGGER AS $$
+DECLARE base_diff DECIMAL(2,1); freq_mult DECIMAL(3,2);
+BEGIN
+  SELECT base_difficulty INTO base_diff FROM task_catalog WHERE id = NEW.task_catalog_id;
+  freq_mult := CASE NEW.frequency
+    WHEN 7 THEN 1.50  WHEN 6 THEN 1.40  WHEN 5 THEN 1.30
+    WHEN 4 THEN 1.10  WHEN 3 THEN 1.00  WHEN 2 THEN 0.85  WHEN 1 THEN 0.70
+  END;
+  NEW.frequency_multiplier := freq_mult;
+  NEW.effective_difficulty := base_diff * freq_mult;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_compute_difficulty
+  BEFORE INSERT OR UPDATE OF frequency ON user_tasks
+  FOR EACH ROW EXECUTE FUNCTION compute_task_difficulty();
+
+--=============================================================
+-- STREAKS
+--=============================================================
+CREATE TABLE streaks (
+  id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id               TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+  user_task_id          UUID NOT NULL REFERENCES user_tasks(id) ON DELETE CASCADE,
+  count                 INTEGER DEFAULT 0,
+  longest_count         INTEGER DEFAULT 0,
+  last_completed_date   DATE,
+  grace_days_remaining  INTEGER DEFAULT 3,
+  grace_days_reset_at   DATE DEFAULT (CURRENT_DATE + INTERVAL '90 days'),
+  shield_active         BOOLEAN DEFAULT FALSE,
+  is_broken             BOOLEAN DEFAULT FALSE,
+  broken_at             TIMESTAMPTZ,
+  recovery_deadline     TIMESTAMPTZ,
+  recovery_cost         INTEGER,
+  UNIQUE (user_id, user_task_id)
+);
+
+CREATE INDEX idx_streaks_broken ON streaks(is_broken, recovery_deadline)
+  WHERE is_broken = TRUE;
+
+--=============================================================
+-- TASK COMPLETIONS (audit trail + anti-cheat)
+--=============================================================
+CREATE TABLE task_completions (
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id           TEXT NOT NULL REFERENCES users(uid),
+  user_task_id      UUID NOT NULL REFERENCES user_tasks(id),
+  task_catalog_id   TEXT NOT NULL REFERENCES task_catalog(id),
+  completed_at      TIMESTAMPTZ DEFAULT NOW(),
+  completion_date   DATE DEFAULT CURRENT_DATE,
+  verification_type TEXT DEFAULT 'honor' 
+    CHECK (verification_type IN ('auto','photo','buddy','honor')),
+  health_connect_data JSONB,
+  streak_at_completion INTEGER,
+  streak_multiplier    DECIMAL(4,2),
+  status_earned        INTEGER,
+  coins_earned         INTEGER,
+  body_age_impact      DECIMAL(4,2),
+  lifespan_impact      DECIMAL(6,4),
+  -- Anti-duplicate
+  UNIQUE (user_id, user_task_id, completion_date)
+);
+
+CREATE INDEX idx_completions_user ON task_completions(user_id, completion_date DESC);
+
+--=============================================================
+-- NEIGHBORHOODS
+--=============================================================
+CREATE TABLE neighborhoods (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name            TEXT NOT NULL UNIQUE,
+  motto           TEXT,
+  type            TEXT CHECK (type IN ('geo','interest')),
+  theme           TEXT,
+  banner_url      TEXT,
+  founder_uid     TEXT REFERENCES users(uid),
+  mayor_uid       TEXT REFERENCES users(uid),
+  member_count    INTEGER DEFAULT 0,
+  is_competitive  BOOLEAN DEFAULT FALSE,
+  collective_hours DECIMAL(10,1) DEFAULT 0,
+  active_members   INTEGER DEFAULT 0,
+  created_at      TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE neighborhood_members (
+  neighborhood_id UUID NOT NULL REFERENCES neighborhoods(id) ON DELETE CASCADE,
+  user_id         TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+  membership_type TEXT CHECK (membership_type IN ('geo','interest')),
+  role            TEXT DEFAULT 'member' CHECK (role IN ('member','mayor','founder')),
+  status_in_neighborhood INTEGER DEFAULT 0,
+  joined_at       TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (neighborhood_id, user_id)
+);
+
+-- Enforce dual membership: max 1 geo + 1 interest
+CREATE OR REPLACE FUNCTION check_dual_membership() RETURNS TRIGGER AS $$
+DECLARE existing_count INTEGER;
+BEGIN
+  SELECT COUNT(*) INTO existing_count
+  FROM neighborhood_members nm
+  JOIN neighborhoods n ON n.id = nm.neighborhood_id
+  WHERE nm.user_id = NEW.user_id
+    AND n.type = (SELECT type FROM neighborhoods WHERE id = NEW.neighborhood_id);
+  IF existing_count >= 1 THEN
+    RAISE EXCEPTION 'User already has a % neighborhood', 
+      (SELECT type FROM neighborhoods WHERE id = NEW.neighborhood_id);
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_dual_membership
+  BEFORE INSERT ON neighborhood_members
+  FOR EACH ROW EXECUTE FUNCTION check_dual_membership();
+
+--=============================================================
+-- RAID BOSSES
+--=============================================================
+CREATE TABLE raid_bosses (
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  neighborhood_id   UUID NOT NULL REFERENCES neighborhoods(id) ON DELETE CASCADE,
+  title             TEXT NOT NULL,
+  description       TEXT,
+  target_value      BIGINT NOT NULL,
+  current_progress  BIGINT DEFAULT 0,
+  unit              TEXT DEFAULT 'kcal',
+  reward_status     INTEGER DEFAULT 10,
+  reward_coins      INTEGER DEFAULT 5,
+  starts_at         TIMESTAMPTZ DEFAULT NOW(),
+  deadline          TIMESTAMPTZ NOT NULL,
+  completed_at      TIMESTAMPTZ,
+  is_active         BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE raid_contributions (
+  raid_id     UUID REFERENCES raid_bosses(id),
+  user_id     TEXT REFERENCES users(uid),
+  amount      BIGINT NOT NULL,
+  contributed_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+--=============================================================
+-- SHOP & INVENTORY
+--=============================================================
+CREATE TABLE shop_items (
+  id          TEXT PRIMARY KEY,
+  name        TEXT NOT NULL,
+  category    TEXT CHECK (category IN ('building_skin','color','effect','character','booster')),
+  price       INTEGER NOT NULL CHECK (price > 0),
+  description TEXT,
+  preview_url TEXT,
+  is_active   BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE user_inventory (
+  user_id     TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+  item_id     TEXT NOT NULL REFERENCES shop_items(id),
+  purchased_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (user_id, item_id)
+);
+
+CREATE TABLE coin_transactions (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     TEXT NOT NULL REFERENCES users(uid),
+  amount      INTEGER NOT NULL,
+  balance_after INTEGER NOT NULL,
+  type        TEXT NOT NULL,
+  reference_id TEXT,
+  description TEXT,
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_coin_tx_user ON coin_transactions(user_id, created_at DESC);
+
+--=============================================================
+-- ACHIEVEMENTS
+--=============================================================
+CREATE TABLE achievement_definitions (
+  id          TEXT PRIMARY KEY,
+  name        TEXT NOT NULL,
+  description TEXT,
+  icon_url    TEXT,
+  condition_type TEXT,
+  condition_value INTEGER,
+  reward_status INTEGER DEFAULT 0,
+  reward_coins  INTEGER DEFAULT 0
+);
+
+CREATE TABLE user_achievements (
+  user_id       TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+  achievement_id TEXT NOT NULL REFERENCES achievement_definitions(id),
+  unlocked_at   TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (user_id, achievement_id)
+);
+
+--=============================================================
+-- PUSH TOKENS
+--=============================================================
+CREATE TABLE push_tokens (
+  user_id    TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+  token      TEXT NOT NULL,
+  platform   TEXT CHECK (platform IN ('android','ios')),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (user_id, token)
+);
+```
+
+### 2.2 Database Views
+
+```sql
+-- Dashboard: tasks + streaks (joined)
+CREATE VIEW v_user_dashboard AS
+SELECT 
+  ut.id as user_task_id, ut.user_id, ut.frequency,
+  ut.effective_difficulty, ut.building_skin,
+  tc.*, 
+  s.count as streak_count, s.longest_count, s.last_completed_date,
+  s.is_broken, s.grace_days_remaining, s.shield_active,
+  s.recovery_deadline, s.recovery_cost
+FROM user_tasks ut
+JOIN task_catalog tc ON tc.id = ut.task_catalog_id
+LEFT JOIN streaks s ON s.user_task_id = ut.id
+WHERE ut.is_active = TRUE;
+
+-- City buildings (for Unity 3D rendering)
+CREATE VIEW v_city_buildings AS
+SELECT 
+  u.uid as user_id, u.name as user_name, u.level as user_level,
+  u.city_plot_x, u.city_plot_y, u.district_name,
+  ut.id as user_task_id, tc.id as task_type, tc.name as task_name,
+  tc.category, tc.emoji, tc.base_difficulty,
+  ut.effective_difficulty, ut.building_skin,
+  s.count as streak_count, s.longest_count, s.is_broken,
+  s.last_completed_date,
+  LEAST(s.count * 5, 500) as building_height,
+  40 + (tc.base_difficulty::int * 10) as building_width,
+  CASE 
+    WHEN s.is_broken THEN 'cracked'
+    WHEN s.count > 0 AND s.count < 7 THEN 'construction'
+    ELSE 'complete'
+  END as building_state
+FROM users u
+JOIN user_tasks ut ON ut.user_id = u.uid AND ut.is_active = TRUE
+JOIN task_catalog tc ON tc.id = ut.task_catalog_id
+LEFT JOIN streaks s ON s.user_task_id = ut.id;
+```
+
+---
+
+## 3. Row Level Security
+
+```sql
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_tasks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE streaks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE task_completions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_inventory ENABLE ROW LEVEL SECURITY;
+ALTER TABLE coin_transactions ENABLE ROW LEVEL SECURITY;
+
+-- Users: public read (skylines), self-write
+CREATE POLICY users_read ON users FOR SELECT USING (TRUE);
+CREATE POLICY users_write ON users FOR UPDATE USING (auth.uid() = uid);
+
+-- Tasks: own data only
+CREATE POLICY tasks_read ON user_tasks FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY tasks_insert ON user_tasks FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- Streaks: own read (server updates via service role)
+CREATE POLICY streaks_read ON streaks FOR SELECT USING (auth.uid() = user_id);
+
+-- Completions: own read
+CREATE POLICY completions_read ON task_completions FOR SELECT USING (auth.uid() = user_id);
+
+-- Inventory + coins: own read
+CREATE POLICY inventory_read ON user_inventory FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY coins_read ON coin_transactions FOR SELECT USING (auth.uid() = user_id);
+```
+
+---
+
+## 4. Redis Data Structures (Upstash)
+
+```
+# Leaderboard sorted sets
+ZADD  leaderboard:global         <status_total> <uid>
+ZADD  leaderboard:monthly:2026-03 <monthly_status> <uid>
+ZADD  leaderboard:weekly:2026-W12 <weekly_status> <uid>
+
+# Rank queries
+ZREVRANK  leaderboard:global <uid>           → rank (0-indexed)
+ZREVRANGE leaderboard:global 0 49 WITHSCORES → top 50
+
+# Raid boss atomic counter
+INCRBY raid:<raid_id>:progress <calories>
+GET    raid:<raid_id>:progress
+
+# Streak hot cache (avoid DB for frequent checks)
+HSET   streak:<uid>:<task_id> count 31 last_date "2026-03-20" broken false
+EXPIRE streak:<uid>:<task_id> 86400
+
+# Online presence (who's in city)
+SADD   city:online <uid>
+SREM   city:online <uid>
+
+# Rate limiting
+SET    ratelimit:complete:<uid> 1 EX 60
+```
+
+---
+
+## 5. Edge Functions
+
+### 5.1 `complete-task` — The Core Endpoint
+
+```typescript
+// supabase/functions/complete-task/index.ts
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { Redis } from "https://deno.land/x/upstash_redis/mod.ts";
+
+serve(async (req) => {
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+  );
+  const redis = new Redis({
+    url: Deno.env.get("UPSTASH_REDIS_URL")!,
+    token: Deno.env.get("UPSTASH_REDIS_TOKEN")!,
+  });
+
+  const uid = await getAuthUserId(req, supabase);
+  const { userTaskId, verificationType, healthConnectData } = await req.json();
+
+  // Rate limit
+  const allowed = await redis.set(`ratelimit:complete:${uid}`, "1", { ex: 60, nx: true });
+  if (!allowed) return jsonResponse({ error: "Too fast" }, 429);
+
+  // Duplicate check
+  const today = new Date().toISOString().split("T")[0];
+  const { data: existing } = await supabase.from("task_completions")
+    .select("id").eq("user_task_id", userTaskId).eq("completion_date", today).maybeSingle();
+  if (existing) return jsonResponse({ error: "Already completed today" }, 409);
+
+  // Load task data
+  const { data: task } = await supabase.from("v_user_dashboard")
+    .select("*").eq("user_task_id", userTaskId).eq("user_id", uid).single();
+
+  // Compute streak + earnings
+  const newStreakCount = (task.streak_count || 0) + 1;
+  const streakMult = getStreakMultiplier(newStreakCount);
+  const verifyWeight = verificationType === "honor" ? 0.7 : 1.0;
+  const statusEarned = Math.round(10 * task.effective_difficulty * streakMult * verifyWeight);
+  const coinsEarned = Math.round(statusEarned / 10);
+
+  // Milestone bonus
+  const milestone = getMilestoneReward(newStreakCount);
+  const totalStatus = statusEarned + milestone.status;
+  const totalCoins = coinsEarned + milestone.coins;
+
+  // Health impact
+  const bodyAgeImpact = task.body_age_impact * streakMult * 0.01;
+  const lifespanImpact = task.lifespan_impact * streakMult * 0.001;
+
+  // Atomic DB write (Postgres RPC)
+  await supabase.rpc("process_task_completion", {
+    p_uid: uid, p_user_task_id: userTaskId, p_task_catalog_id: task.id,
+    p_streak_count: newStreakCount, p_longest_streak: Math.max(task.longest_count || 0, newStreakCount),
+    p_status_earned: totalStatus, p_coins_earned: totalCoins,
+    p_body_age_impact: bodyAgeImpact, p_lifespan_impact: lifespanImpact,
+    p_verification_type: verificationType, p_health_connect_data: healthConnectData || null,
+    p_streak_multiplier: streakMult, p_completion_date: today,
+  });
+
+  // Redis: update leaderboard + streak cache
+  await Promise.all([
+    redis.zincrby("leaderboard:global", totalStatus, uid),
+    redis.zincrby(`leaderboard:monthly:${today.substring(0, 7)}`, totalStatus, uid),
+    redis.hset(`streak:${uid}:${userTaskId}`, {
+      count: newStreakCount, last_date: today, broken: "false"
+    }),
+  ]);
+
+  // Raid contribution (if applicable)
+  if (task.calories_burned) {
+    await contributeToActiveRaid(supabase, redis, uid, task.calories_burned);
+  }
+
+  return jsonResponse({
+    streakCount: newStreakCount, statusEarned: totalStatus, coinsEarned: totalCoins,
+    bodyAgeImpact, lifespanImpact,
+    milestone: milestone.status > 0 ? newStreakCount : null,
+    healthMessage: `You just reduced diabetes risk by ${(task.disease_risk_diabetes * 0.01).toFixed(1)}%!`
+  });
+});
+
+function getStreakMultiplier(days: number): number {
+  if (days <= 3) return 1.0;  if (days <= 7) return 1.2;
+  if (days <= 14) return 1.4; if (days <= 30) return 1.6;
+  if (days <= 90) return 1.8; if (days <= 365) return 2.0;
+  return 2.5;
+}
+
+function getMilestoneReward(days: number) {
+  const r: Record<number, {status: number; coins: number}> = {
+    7: {status:100, coins:50}, 30: {status:500, coins:200},
+    90: {status:2000, coins:500}, 365: {status:10000, coins:2000},
+  };
+  return r[days] || {status: 0, coins: 0};
+}
+```
+
+**Postgres RPC (atomic transaction):**
+
+```sql
+CREATE OR REPLACE FUNCTION process_task_completion(
+  p_uid TEXT, p_user_task_id UUID, p_task_catalog_id TEXT,
+  p_streak_count INT, p_longest_streak INT,
+  p_status_earned INT, p_coins_earned INT,
+  p_body_age_impact DECIMAL, p_lifespan_impact DECIMAL,
+  p_verification_type TEXT, p_health_connect_data JSONB,
+  p_streak_multiplier DECIMAL, p_completion_date DATE
+) RETURNS JSONB AS $$
+DECLARE new_coins INTEGER;
+BEGIN
+  -- Insert completion
+  INSERT INTO task_completions (user_id, user_task_id, task_catalog_id, completion_date,
+    verification_type, health_connect_data, streak_at_completion, streak_multiplier,
+    status_earned, coins_earned, body_age_impact, lifespan_impact)
+  VALUES (p_uid, p_user_task_id, p_task_catalog_id, p_completion_date,
+    p_verification_type, p_health_connect_data, p_streak_count, p_streak_multiplier,
+    p_status_earned, p_coins_earned, p_body_age_impact, p_lifespan_impact);
+
+  -- Update streak
+  UPDATE streaks SET count = p_streak_count, longest_count = GREATEST(longest_count, p_longest_streak),
+    last_completed_date = p_completion_date, is_broken = FALSE, broken_at = NULL,
+    recovery_deadline = NULL, recovery_cost = NULL
+  WHERE user_id = p_uid AND user_task_id = p_user_task_id;
+
+  -- Update user stats
+  UPDATE users SET status_total = status_total + p_status_earned,
+    coins = coins + p_coins_earned,
+    body_age = GREATEST(body_age - p_body_age_impact, real_age - 15),
+    lifespan_added = lifespan_added + p_lifespan_impact
+  WHERE uid = p_uid RETURNING coins INTO new_coins;
+
+  -- Coin ledger
+  INSERT INTO coin_transactions (user_id, amount, balance_after, type, description)
+  VALUES (p_uid, p_coins_earned, new_coins, 'task_completion', 'Earned from ' || p_task_catalog_id);
+
+  RETURN jsonb_build_object('new_coins', new_coins);
+END;
+$$ LANGUAGE plpgsql;
+```
+
+---
+
+### 5.2 `recover-streak`
+
+```typescript
+serve(async (req) => {
+  const uid = await getAuthUserId(req, supabase);
+  const { userTaskId } = await req.json();
+
+  const { data: streak } = await supabase.from("streaks")
+    .select("*").eq("user_id", uid).eq("user_task_id", userTaskId).single();
+
+  if (!streak.is_broken) return error("Streak not broken");
+  if (new Date() > new Date(streak.recovery_deadline)) return error("48hr expired");
+
+  const { data: user } = await supabase.from("users").select("coins").eq("uid", uid).single();
+  if (user.coins < streak.recovery_cost) return error("Insufficient coins");
+
+  await supabase.rpc("recover_streak", {
+    p_uid: uid, p_user_task_id: userTaskId, p_cost: streak.recovery_cost
+  });
+
+  await redis.hset(`streak:${uid}:${userTaskId}`, { broken: "false" });
+  return success({ recovered: true, coinsSpent: streak.recovery_cost });
+});
+```
+
+### 5.3 `get-leaderboard`
+
+```typescript
+serve(async (req) => {
+  const uid = await getAuthUserId(req, supabase);
+  const { timeFrame = "global", limit = 50 } = await req.json();
+
+  const key = timeFrame === "weekly" ? `leaderboard:weekly:${getWeek()}`
+    : timeFrame === "monthly" ? `leaderboard:monthly:${getMonth()}`
+    : "leaderboard:global";
+
+  const top = await redis.zrevrange(key, 0, limit - 1, { withScores: true });
+  const userRank = await redis.zrevrank(key, uid);
+  const userScore = await redis.zscore(key, uid);
+
+  // Hydrate with profiles
+  const uids = top.filter((_, i) => i % 2 === 0) as string[];
+  const { data: profiles } = await supabase.from("users")
+    .select("uid, name, avatar_config, level").in("uid", uids);
+
+  const rankings = uids.map((id, i) => ({
+    rank: i + 1, uid: id, score: Number(top[i * 2 + 1]),
+    ...profiles?.find(p => p.uid === id),
+  }));
+
+  return success({ rankings, userRank: userRank !== null ? userRank + 1 : null, userScore });
+});
+```
+
+### 5.4 `purchase-item`
+
+```typescript
+serve(async (req) => {
+  const uid = await getAuthUserId(req, supabase);
+  const { itemId } = await req.json();
+  const { data, error } = await supabase.rpc("purchase_shop_item", {
+    p_uid: uid, p_item_id: itemId
+  });
+  if (error) return errorResponse(error.message);
+  return success(data);
+});
+```
+
+```sql
+CREATE OR REPLACE FUNCTION purchase_shop_item(p_uid TEXT, p_item_id TEXT) RETURNS JSONB AS $$
+DECLARE item_price INTEGER; user_balance INTEGER;
+BEGIN
+  SELECT price INTO item_price FROM shop_items WHERE id = p_item_id AND is_active;
+  IF NOT FOUND THEN RAISE EXCEPTION 'Item not found'; END IF;
+  IF EXISTS (SELECT 1 FROM user_inventory WHERE user_id=p_uid AND item_id=p_item_id) THEN
+    RAISE EXCEPTION 'Already owned'; END IF;
+  UPDATE users SET coins = coins - item_price WHERE uid = p_uid AND coins >= item_price
+    RETURNING coins INTO user_balance;
+  IF NOT FOUND THEN RAISE EXCEPTION 'Insufficient coins'; END IF;
+  INSERT INTO user_inventory (user_id, item_id) VALUES (p_uid, p_item_id);
+  INSERT INTO coin_transactions (user_id, amount, balance_after, type, reference_id, description)
+    VALUES (p_uid, -item_price, user_balance, 'purchase', p_item_id, 'Purchased ' || p_item_id);
+  RETURN jsonb_build_object('success', true, 'balance', user_balance);
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### 5.5 `get-city-data` (for Unity 3D)
+
+```typescript
+serve(async (req) => {
+  const { plotX, plotY, radius = 2 } = await req.json();
+  const { data } = await supabase.from("v_city_buildings").select("*")
+    .gte("city_plot_x", plotX - radius).lte("city_plot_x", plotX + radius)
+    .gte("city_plot_y", plotY - radius).lte("city_plot_y", plotY + radius);
+  
+  // Group by user
+  const districts: Record<string, any[]> = {};
+  data?.forEach(b => {
+    if (!districts[b.user_id]) districts[b.user_id] = [];
+    districts[b.user_id].push(b);
+  });
+  return success({ districts });
+});
+```
+
+### 5.6 `join-neighborhood` / 5.7 `found-neighborhood` / 5.8 `buy-streak-shield`
+
+Each follows the same pattern: validate auth → validate business rules → atomic DB write via RPC → return result.
+
+---
+
+## 6. Scheduled Jobs (pg_cron)
+
+```sql
+-- Midnight streak checker (00:05 UTC daily)
+SELECT cron.schedule('midnight-streak-check', '5 0 * * *', $$
+  UPDATE streaks SET
+    grace_days_remaining = CASE WHEN grace_days_remaining > 0 THEN grace_days_remaining - 1 ELSE 0 END,
+    is_broken = CASE WHEN grace_days_remaining <= 0 AND NOT shield_active THEN TRUE ELSE FALSE END,
+    broken_at = CASE WHEN grace_days_remaining <= 0 AND NOT shield_active THEN NOW() ELSE NULL END,
+    recovery_deadline = CASE WHEN grace_days_remaining <= 0 AND NOT shield_active THEN NOW() + INTERVAL '48 hours' ELSE NULL END,
+    recovery_cost = CASE WHEN grace_days_remaining <= 0 AND NOT shield_active THEN
+      CASE WHEN count BETWEEN 1 AND 7 THEN 50 WHEN count BETWEEN 8 AND 30 THEN 150
+           WHEN count BETWEEN 31 AND 90 THEN 300 WHEN count BETWEEN 91 AND 365 THEN 500 ELSE 1000 END
+      ELSE NULL END,
+    shield_active = CASE WHEN grace_days_remaining <= 0 AND shield_active THEN FALSE ELSE shield_active END
+  WHERE last_completed_date < CURRENT_DATE - 1 AND is_broken = FALSE AND count > 0;
+$$);
+
+-- Expire unrecovered streaks (every 15 min)
+SELECT cron.schedule('expire-broken-streaks', '*/15 * * * *', $$
+  UPDATE streaks SET count = 0, is_broken = FALSE, broken_at = NULL,
+    recovery_deadline = NULL, recovery_cost = NULL
+  WHERE is_broken = TRUE AND recovery_deadline < NOW();
+$$);
+
+-- Quarterly grace day reset
+SELECT cron.schedule('quarterly-grace-reset', '0 0 1 1,4,7,10 *', $$
+  UPDATE streaks SET grace_days_remaining = 3, grace_days_reset_at = CURRENT_DATE + INTERVAL '90 days';
+$$);
+
+-- Monthly mayor rotation
+SELECT cron.schedule('monthly-mayor-rotation', '0 0 1 * *', $$
+  UPDATE neighborhoods n SET mayor_uid = (
+    SELECT nm.user_id FROM neighborhood_members nm
+    JOIN users u ON u.uid = nm.user_id WHERE nm.neighborhood_id = n.id
+    ORDER BY nm.status_in_neighborhood DESC LIMIT 1);
+$$);
+```
+
+---
+
+## 7. Edge Function Directory
+
+```
+supabase/
+├── config.toml
+├── seed.sql                    # task_catalog + shop_items + achievements
+├── migrations/
+│   ├── 001_core_tables.sql
+│   ├── 002_views.sql
+│   ├── 003_rls.sql
+│   ├── 004_rpc_functions.sql
+│   └── 005_cron_jobs.sql
+└── functions/
+    ├── _shared/
+    │   ├── supabase.ts         # Client init
+    │   ├── redis.ts            # Redis init
+    │   ├── auth.ts             # JWT helper
+    │   └── response.ts         # JSON response helpers
+    ├── complete-task/index.ts
+    ├── recover-streak/index.ts
+    ├── get-leaderboard/index.ts
+    ├── purchase-item/index.ts
+    ├── get-city-data/index.ts
+    ├── buy-streak-shield/index.ts
+    ├── join-neighborhood/index.ts
+    ├── found-neighborhood/index.ts
+    └── send-notification/index.ts
+```
+
+---
+
+## 8. Complete API Reference
+
+### Direct Queries (Flutter → PostgREST)
+
+| Method | Endpoint | Screen |
+|---|---|---|
+| `GET` | `/rest/v1/task_catalog` | Task Picker |
+| `GET` | `/rest/v1/v_user_dashboard?user_id=eq.{uid}` | Home Dashboard |
+| `GET` | `/rest/v1/users?uid=eq.{uid}` | Profile |
+| `POST` | `/rest/v1/user_tasks` | Task Picker |
+| `PATCH` | `/rest/v1/users?uid=eq.{uid}` | Character Creation |
+| `GET` | `/rest/v1/user_inventory?user_id=eq.{uid}` | Coin Shop |
+| `GET` | `/rest/v1/user_achievements?user_id=eq.{uid}` | Profile |
+| `GET` | `/rest/v1/neighborhoods?id=eq.{id}` | Neighborhood |
+| `GET` | `/rest/v1/raid_bosses?neighborhood_id=eq.{id}&is_active=eq.true` | Neighborhood |
+| `GET` | `/rest/v1/v_city_buildings?city_plot_x=...` | Unity 3D |
+
+### Edge Functions (validated server-side)
+
+| Function | Screen | Purpose |
+|---|---|---|
+| `complete-task` | Task Detail | Validate + earn + update |
+| `recover-streak` | Streak Recovery | Pay coins + restore |
+| `get-leaderboard` | Leaderboard | Redis sorted set read |
+| `purchase-item` | Coin Shop | Atomic purchase |
+| `get-city-data` | Unity 3D | Nearby plots |
+| `buy-streak-shield` | Streak screen | Shield purchase |
+| `join-neighborhood` | Neighborhood | Dual membership enforcement |
+| `found-neighborhood` | Profile (Lv10+) | Create neighborhood |
+
+### Realtime Subscriptions
+
+| Table | Screen | Purpose |
+|---|---|---|
+| `streaks` (own rows) | Home Dashboard | Live streak count |
+| `raid_bosses` | Neighborhood | Raid progress |
+| `users` (own row) | All | Status/coins/level changes |
+
+---
+
+## 9. Feature ↔ Backend Matrix
+
+| Feature | PostgREST | Edge Fn | Redis | Realtime | Cron |
+|---|---|---|---|---|---|
+| Character Creation | ✅ PATCH | | | | |
+| Task Picker | ✅ GET+POST | | | | |
+| Home Dashboard | ✅ GET | | | ✅ streaks | |
+| Task Completion | | ✅ | ✅ ZADD | | |
+| Celebration | | (response) | | | |
+| Leaderboard | | ✅ | ✅ ZREVRANGE | | |
+| Streak Recovery | | ✅ | ✅ HSET | | ✅ expire |
+| Neighborhood | ✅ GET | ✅ join/found | | ✅ raids | ✅ mayor |
+| Profile | ✅ GET | | | ✅ users | |
+| Coin Shop | ✅ GET | ✅ purchase | | | |
+| Skyline (Unity) | ✅ GET | ✅ city-data | | | |
+| Streak Protection | | | | | ✅ midnight |
+| Grace Reset | | | | | ✅ quarterly |

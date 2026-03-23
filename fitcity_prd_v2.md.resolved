@@ -1,0 +1,531 @@
+# FitCity — Gamified Fitness App with City-Based Competition (v2)
+
+## 🎯 Elevator Pitch
+A fitness tracking app where your real-world workouts build a **personal skyline** — a dramatic cyberpunk city visualization of your fitness identity with towering skyscrapers you can explore via helicopter flyover. Compete with friends, build neighborhoods, and prove your crew is the fittest.
+
+---
+
+## 🏗️ Core Concept Breakdown
+
+### 1. One World, Many Neighborhoods (Phased City Model)
+
+Instead of mapping users to real-world cities from day 1 (which creates empty, dead cities), all users start in **one global city: FitCity**. Neighborhoods emerge organically as the user base grows.
+
+| Phase | Trigger | City Model |
+|---|---|---|
+| **Phase 1: Global Pool** | Launch → 500 users | Everyone in one global FitCity. Single leaderboard, one shared skyline map. Community feels alive even with 50 users. |
+| **Phase 2: Neighborhoods Emerge** | 500 → 10K users | High-status users can **found neighborhoods** (geo or interest-based). Users opt-in. Neighborhoods compete against each other. |
+| **Phase 3: Geographic Cities** | 10K+ users | Neighborhoods group into real geographic cities. Full inter-city competition unlocked. |
+
+**Why this works:**
+- No empty cities — the global pool is always populated
+- Neighborhoods only exist when there are enough people to fill them
+- Users choose their tribe rather than being assigned to a dead zone
+- All user data (skylines, streaks, status) carries over across phases — it's just re-bucketing the social layer
+
+### 2. Task System
+- **Examples**: 1hr daily workout (4 days/week), 1hr meditation, 2hr outdoor sports
+- Tasks/goals are **pre-curated in v1**, democratic voting in v2
+- Users pick which tasks they want to commit to
+
+### 3. Virtual Character & Social Status
+- Every user has a virtual avatar/character
+- **Social Status** = Σ (Task Difficulty × Streak Multiplier)
+- Status unlocks in-game privileges (neighborhood founding, clans, land, influence)
+
+### 4. 🏙️ Fitness Skyline (Signature Feature)
+
+Your fitness data is visualized as a **full 3D cyberpunk city** — real three-dimensional skyscrapers you can walk, fly, and cruise through. Not a flat chart or 2D card — a living, explorable world.
+
+| Building Property | What It Represents |
+|---|---|
+| **Height** | Streak length — 30-day streak = towering skyscraper |
+| **Width** | Activity variety across categories |
+| **Color / glow** | Category: cyan=cardio, magenta=strength, green=wellness, amber=sports |
+| **Density (buildings per plot)** | Weekly active days |
+| **Neon signage** | Task name + streak count glowing on the facade |
+
+**3D World Design**:
+- **Full 3D geometry** — modular skyscrapers with Base + Floor stacks + Crown, rendered in Unity URP
+- **Cyberpunk palette** — deep purples, pink/magenta sky, cyan/teal neon accent lights, dusk-to-night atmosphere
+- **Populated city grid** — each user occupies a 200m × 200m plot; plots placed on a shared world grid separated by roads
+- **Lit windows** — emissive window shader: more windows lit = more recent activity
+- **Water harbor** — planar reflection at city edge; buildings reflect in water
+- **Volumetric atmosphere** — distance fog (purple tint), god rays from sunset, ambient bloom
+- **Visibility** — cruise to other users' plots and see their skylines directly in the 3D world
+- **Customization** — spend coins to change building skins, materials, effects, and avatar cosmetics
+
+**Building states**:
+- 🏗️ Active streak < 7 days: Construction crane on rooftop, scaffolding texture
+- ✅ Active streak ≥ 7 days: Complete building, all windows lit proportionally
+- 💔 Broken streak: Crack overlay, desaturated materials, flickering lights
+- 🔧 Recovered streak: Crack-dissolve heal animation plays
+- 🏛️ 365-day streak: Unique landmark tower model (one-of-a-kind architecture)
+
+**Social impact**: Your skyline IS your identity. Cruise past another user's district and instantly read their commitment from how tall their towers stand.
+
+### 4.1 🚁 Cruise & Exploration Mode
+
+Users can **physically cruise through the 3D city** via a third-person avatar — not a fly-over video, but a real explorable 3D world shared with all users in the neighborhood.
+
+**Experience**:
+- **Third-person avatar** (hooded character visible behind) moves through the city streets and sky
+- **Shared world** — multiple users' plots visible in one continuous city; cruise from your district into your neighbor's
+- **Controls** — left joystick to move, right joystick/drag to rotate camera, altitude slider (Street Level ↔ Bird's Eye)
+- **Cruise mode** — tap CRUISE to auto-fly forward at set speed (shown in knots), cinematic camera follows
+- **Building interaction** — tap any building → holographic glass tooltip: task name, owner, streak length, level, "TAP TO SEE DETAILS"
+- **Altitude slider** (right edge) — smoothly transitions: walking (ground level) → flying (mid-air) → bird's eye (top-down)
+- **HUD** — altitude in feet, compass direction, speed display, city minimap
+- **Capture** — "📸 Capture Skyline" → screenshot saved and shared via native share sheet
+- **Searchlight** — helicopter searchlight sweeps across buildings in fly mode
+
+**Multi-user world**:
+- Each user's buildings occupy their own named district plot
+- Nearby users' districts loaded on-demand as you approach (proximity streaming)
+- LOD system: full detail nearby, simplified silhouettes at distance
+- District boundary glow ring + floating nameplate ("Alex's District · Level 12")
+
+**Why this matters**: This is a fitness game with a shared persistent world — not just a data visualization. Users are motivated to keep streaks active because their buildings visibly shrink and crack if inactive. Visiting neighbors' cities creates organic social accountability.
+
+### 5. 3-Layer Incentive Model
+
+| Layer | When | What Drives It |
+|---|---|---|
+| **Personal Progress** | Day 1+ | Character evolution, XP, skill trees, streak badges |
+| **Social & Community** | Week 2+ | Leaderboards, neighborhood accountability, rank |
+| **Tangible Rewards** | Month 2+ | Partner gym discounts, brand vouchers, sponsored events |
+
+### 6. 🏛️ Neighborhood Creation as a Status Feature
+
+Neighborhood creation is **not an admin task** — it's a **reward** unlocked by high-status users:
+
+- **Requirement**: Reach **Level 10 Status** to unlock the "Found a Neighborhood" ability
+- **Founder = Natural Leader**: The founder becomes the neighborhood's first **Mayor** with special powers:
+  - Propose neighborhood-wide events and challenges
+  - Set motto and customize neighborhood banner
+  - Pin announcements for members
+- **Naming & Identity**: Founders name their neighborhood, set a description, and choose a theme:
+  - Geographic: "Bandra Crew", "Koramangala Squad"
+  - Interest-based: "Iron Nation", "Zen Valley", "Cardio Kings"
+- **Recruitment Loop**: Founders invite members → more members = taller collective skyline → attracts more members (viral growth)
+- **Dual Membership**: Users can join **1 geographic neighborhood** + **1 interest-based neighborhood**, giving dual identity and dual competition
+- **Threshold Unlock**: Neighborhood unlocks competitive features (leaderboard, clan wars) once it hits **20+ active members**
+- **Mayor Rotation**: Highest-status member becomes Mayor each month — keeps competition alive
+
+**Incentive chain**: Grind for status → found a neighborhood → recruit members → build the tallest collective skyline → become the most powerful neighborhood → attract more members.
+
+### 7. Clans & Land Ownership (Phase 2+)
+- High-status users can form clans within neighborhoods and claim virtual territory
+- Incentive loop: more tasks → more streak → more status → bigger empire
+- **Land** → Build virtual facilities (Gym, Yoga Studio, Sports Arena) that give buffs to clan members
+- **Clans** → Participate in Clan Wars (weekly challenges), share resources, group achievements
+
+### 8. Inter-Neighborhood & City Competition
+- **Phase 1**: Global leaderboard only (individuals)
+- **Phase 2**: Neighborhoods compete on **collective activity volume + consistency** (e.g., "Bandra Crew: 12,000 hrs vs Koramangala Squad: 9,500 hrs")
+- **Phase 3**: Geographic cities compete via aggregate neighborhood scores
+- Neighborhood-level and city-level aggregate skyline comparisons
+
+### 9. 🫀 Health Impact Engine
+
+Every task shows **projected health gains before the user starts** — turning abstract exercise into concrete, research-backed results. Based on published WHO, AHA, and medical research data (lookup tables, not AI).
+
+#### Impact Metrics
+
+| # | Metric | What It Shows | Example |
+|---|---|---|---|
+| 1 | **🧬 Body Age** | Composite score — real age minus fitness offset | "You're 30 but your body is 26" |
+| 2 | **❤️ Disease Risk Reduction** | % reduction for heart disease, diabetes, stroke, certain cancers, hypertension, osteoporosis | "-12% heart disease risk" |
+| 3 | **🧠 Mental Health Score** | Anxiety/depression risk reduction, stress resilience, cognitive sharpness | "+15% stress resilience" |
+| 4 | **😴 Sleep Impact** | Sleep quality improvement, deep sleep boost, time-to-sleep reduction | "+12% sleep quality" |
+| 5 | **🔋 Energy & Stamina** | Daily energy battery level, predicted boost from today's task | "Energy +20% tomorrow" |
+| 6 | **🫁 VO₂ Max** | Cardio fitness level, percentile rank for age/gender, projected improvement | "Better than 72% of 28-year-olds" |
+| 7 | **🦴 Bone & Joint Health** | Bone density impact, joint mobility, injury risk reduction | "-40% osteoporosis risk by 60" |
+| 8 | **🏋️ Strength Milestones** | Projected strength gains, body composition shift, functional fitness | "Lean mass +0.8kg in 4 weeks" |
+| 9 | **⏳ Lifespan Added** | Estimated years added to life expectancy based on activity level | "+0.3 years this month" |
+| 10 | **💰 Money Saved** | Projected savings in future medical costs from current fitness level | "₹12,000/year saved" |
+| 11 | **🌍 Environmental Impact** | CO₂ saved from cycling/walking instead of driving | "12kg CO₂ saved this month" |
+| 12 | **⚡ Recovery Score** | Body recovery %, overtraining risk, optimal next workout | "85% recovered — safe for HIIT" |
+
+#### UX: Health Impact Preview (per task)
+
+When a user taps any task, they see projected gains:
+- **Before starting**: "If you complete this: Body Age -1.5yr, Heart Risk -12%, +2,450 kcal burned"
+- **After completing**: Celebration screen — "You just reduced diabetes risk by 0.3%!"
+- **Weekly report**: Push notification — "This week you added 0.05 years to your life"
+
+#### Skyline Integration
+- **Body Age** glows as a golden number above your skyline
+- **Lifespan counter** visible on profile — cumulative years added since joining
+- **Green trees/parks** appear around buildings for environmental impact tasks
+
+#### MVP vs Later
+
+| Metric | MVP? | Rationale |
+|---|---|---|
+| Body Age | ✅ | One number, massive emotional impact, shareable |
+| Lifespan Added | ✅ | Unforgettable — no other app shows this |
+| Disease Risk (top 3) | ✅ | Concrete, simple lookup table |
+| Calories Burned | ✅ | Standard, easy to calculate |
+| Money Saved | ✅ | Unique angle, easy math, very shareable |
+| Sleep Impact | ❌ v2 | Needs wearable sleep data |
+| VO₂ Max | ❌ v2 | Needs running data integration |
+| Mental Health Score | ❌ v2 | Sensitive, needs careful design |
+| Recovery Score | ❌ v2 | Needs HRV/wearable data |
+| Environmental Impact | ❌ v2 | Nice-to-have, not core |
+
+> [!NOTE]
+> All health projections include disclaimer: *"Based on population-level research. Not medical advice. Consult your doctor."*
+
+### 10. 🛡️ Streak Protection & Recovery
+
+3 layers of safety — generous for genuine users, unexploitable for gamers:
+
+| Layer | What | Cost | Limits |
+|---|---|---|---|
+| **Grace Days** | Auto-protects a missed day | Free | 3 per quarter, resets every 90 days |
+| **Streak Shield** | Pre-purchased protection | 150 coins | 1 active at a time |
+| **Streak Recovery** | Buy back a broken streak | Escalating | Within 48hrs of break only |
+
+**Streak Recovery cost by streak length:**
+
+| Broken Streak | Cost |
+|---|---|
+| 1-7 days | 50 coins |
+| 8-30 days | 150 coins |
+| 31-90 days | 300 coins |
+| 91-365 days | 500 coins |
+| 365+ days | 1000 coins |
+
+**Flow**: Day missed → grace day remaining? → auto-use ✅ → shield active? → auto-use ✅ → neither? → streak broken 💔 → 48hr recovery window → pay coins or lose streak permanently.
+
+**Skyline visuals**: Grace/shield days show subtle shimmer. Broken streak (in 48hr window) shows cracks with a “repair” button. Permanently broken = cracks, height reverts.
+
+---
+
+## ✅ What's Strong About This Idea
+
+| Strength | Why It Works |
+|---|---|
+| **Organic community growth** | No empty cities — neighborhoods form when ready, not forced |
+| **Neighborhood founding as reward** | High-status users earn the right to build community — creates natural leaders |
+| **Streak mechanics** | Proven addictive (Duolingo, Snapchat) — loss aversion keeps users coming back |
+| **Social status as currency** | Intrinsic + extrinsic motivation loop — you're fit AND you're "rich" in-game |
+| **Inter-neighborhood competition** | Creates natural virality — "Bandra Crew vs Koramangala Squad" is shareable |
+| **Dual membership** | Users never have to choose between local identity and interest identity |
+
+---
+
+## 🔴 Critical Challenges & Pushbacks
+
+### Challenge 1: The Cold Start Problem 🥶 — ✅ SOLVED
+> **How does a city work when there are only 2-3 users?**
+
+**Solution**: The "One World, Many Neighborhoods" approach eliminates this entirely. All users start in one global pool. Neighborhoods only form when there's enough density. No user ever sees an empty city.
+
+---
+
+### Challenge 2: Task Verification — The Cheat Problem 🤥
+> **How do you verify someone actually did a 1-hour workout or played 2 hours of badminton?**
+
+**Solution**: Tiered verification system:
+- **Auto-verified**: Steps, running, cycling (via phone sensors / wearables like Google Fit, Samsung Health)
+- **Photo/video verified**: Gym check-ins, outdoor sports (snap a photo, community can flag fakes)
+- **Buddy-verified**: A workout partner confirms you showed up
+- **Honor system** (lowest weight in status calculation): Self-reported tasks count less toward status
+
+---
+
+### Challenge 3: Social Status Formula is Too Simple 📊
+> **Social Status = Tasks × Streak is gameable.**
+
+**Solution**: Introduce a **task difficulty weight**:
+```
+Social Status = Σ (Task Difficulty × Streak Multiplier)
+```
+Where task difficulty is community-rated (1-5 stars). A 2-hour outdoor sport session is worth 4-5× more than a 5-min stretch.
+
+---
+
+### Challenge 4: What Defines a "City"? 🗺️ — ✅ SOLVED
+> **Mumbai has 20 million people. Is that one city?**
+
+**Solution**: With the organic neighborhood model, this resolves naturally. Neighborhoods self-size to 20-500 active users. Multiple neighborhoods can exist in Mumbai ("Bandra Crew", "Andheri Runners", "Powai Lifters"). The "city" layer only activates in Phase 3 when there's enough neighborhood density to aggregate.
+
+---
+
+### Challenge 5: Inter-City Skill Comparison 🏸
+> **How do you measure "Badminton level of Mumbai vs Delhi"?**
+
+**Solution**: Instead of measuring "skill level", measure **activity volume + consistency**:
+- "Mumbai collectively played 12,000 hours of badminton this month vs Delhi's 9,500"
+- This is verifiable (if someone logs a badminton session) and fair
+
+---
+
+### Challenge 6: Land & Clans Feel Hollow Without Depth 🏰
+> **What does "owning land" actually mean? What do clans DO?**
+
+**Solution**: Give virtual assets **functional meaning**:
+- **Land** → Build virtual **facilities** (Gym, Yoga Studio, Sports Arena) that give buffs/bonuses to your clan members
+- **Clans** → Participate in **Clan Wars** (weekly challenges against rival clans), share resources, unlock group achievements
+- **Buildings unlock real perks**: Partner with local gyms/brands — "Level 5 Gym on your land = 10% discount at a partner gym nearby"
+
+---
+
+## 💡 Innovative Feature Suggestions
+
+### 1. 🌳 Seasonal Campaigns
+Like gaming battle passes — every 6-8 weeks, a new "season" with themed challenges (e.g., "Monsoon Marathon Season", "Summer Sports Festival"). Keeps content fresh, prevents stagnation.
+
+### 2. 🧙 Skill Trees, Not Just Tasks
+Instead of flat tasks, create **progression paths**:
+- Running → 5K → 10K → Half Marathon → Marathon
+- Yoga → Beginner → Intermediate → Advanced → Instructor
+- Each milestone unlocks new character abilities or visual upgrades
+
+### 3. 🐉 Neighborhood Raid Bosses
+Monthly **cooperative neighborhood-wide challenge** (e.g., "Collectively burn 1 million calories to defeat the Dragon"). Everyone contributes, the neighborhood earns rewards. Massive engagement driver (Pokémon GO model).
+
+### 4. 🤝 Mentor/Apprentice System
+High-status veteran users can **mentor** newcomers. Mentors earn bonus status when their apprentice completes tasks. Creates organic onboarding and retention.
+
+### 5. 📸 AR City Overlay (Future Phase)
+Show virtual buildings, character avatars, and neighborhood territories overlaid on Google Maps or through AR camera.
+
+### 6. 🎲 Random Daily Quests
+Beyond user-set tasks, generate **surprise daily quests** (e.g., "Take 10,000 steps today for a 2× status boost"). Adds unpredictability and excitement.
+
+---
+
+## 👤 Target Audience (Confirmed)
+
+**Fitness-oriented people interested in building community.** Not pure gamers, not elite athletes — people who:
+- Already work out or want to start
+- Are motivated by community and accountability
+- Enjoy friendly competition
+- Would share their progress socially
+
+---
+
+## 🚪 Onboarding Strategy
+
+**Approach**: Task Picker onboarding — users cherry-pick individual tasks and set their own frequency:
+
+1. **Sign up** → Location optionally detected (stored for future neighborhood suggestions)
+2. **Create character** → Pick avatar, name, basic customization
+3. **Task Picker** — browse all available tasks grouped by category, pick 3-6:
+   - 🏃 **Cardio**: Walk 5K steps, Run 3km, Cycling 30min, Jump rope 15min
+   - 💪 **Strength**: Gym workout 1hr, Home workout 30min, Core exercises 15min
+   - 🧘 **Wellness**: Meditation 15min, Yoga session 45min, Deep breathing 10min
+   - 🏅 **Sports**: Outdoor sports 2hr, Swimming 1hr, Stretching 15min
+   - Each task shows its **base difficulty** (★★★☆☆) and users **choose frequency** (1-7x/week)
+   - As tasks are selected, show live **Health Impact Preview**: "Your combo → Body Age -1.2yr"
+   - Effective difficulty recalculates in real-time as frequency changes
+4. **First task completion** → First building appears on global skyline map (instant gratification)
+5. **Day 3 milestone** → Unlock global leaderboard visibility
+6. **Day 7 milestone** → Unlock adding more tasks (Level 3)
+7. **Level 10 Status** → Unlock "Found a Neighborhood" ability
+
+> [!TIP]
+> The key insight: show the skyline building **immediately** after the first task. The visual reward of seeing your first structure appear is the hook.
+
+---
+
+## 💰 Dual Currency Economy (Confirmed)
+
+**Two currencies keep the leaderboard pure while enabling a rich cosmetic economy:**
+
+| | Status | Coins |
+|---|---|---|
+| **Nature** | Non-spendable score | Spendable currency |
+| **Purpose** | Rank, unlock features, determine Mayor | Buy cosmetics & upgrades |
+| **Analogy** | Your credit score | Your bank balance |
+
+### Earning
+
+**Dynamic Difficulty Scoring** — status reward adjusts based on task's base difficulty AND the user's chosen frequency:
+
+```
+Effective Difficulty = Base Difficulty × Frequency Multiplier
+Status Earned = 10 × Effective Difficulty × Streak Multiplier
+Coins Earned = Status / 10
+```
+
+| Frequency | Multiplier | Why |
+|---|---|---|
+| 7x/week (daily) | 1.5× | Max commitment |
+| 5x/week | 1.3× | High |
+| 4x/week | 1.1× | Above baseline |
+| 3x/week | 1.0× | Baseline |
+| 2x/week | 0.85× | Below baseline |
+| 1x/week | 0.7× | Minimal |
+
+**Example**: Gym workout (base 4★) at 5x/week, day-10 streak:
+- Effective difficulty = 4 × 1.3 = 5.2
+- Streak multiplier (day 10) = ~1.4
+- Status = 10 × 5.2 × 1.4 = **72.8 → 73**
+- Coins = 73 / 10 = **7**
+
+| Additional Bonuses | Status | Coins |
+|---|---|---|
+| Milestone (7/30/90/365 day) | +100 / +500 / +2K / +10K | +50 / +200 / +500 / +2K |
+| First workout of the day | +5 | +1 |
+| Weekly challenge complete | +50 | +20 |
+| Buddy-verified workout | +15 bonus | +2 |
+| Recruit a friend | +25 | +10 |
+| Neighborhood raid boss | +10 | +5 |
+| Win neighborhood competition | +200 | +100 |
+| Mentor bonus | +5 | +2 |
+
+### Spending Coins
+
+**Skyline**: Building skins 50-200, color themes 30, glow/particle effects 100-300, landmark skins 500, terrain tiles 50-150, night ambiance 100
+
+**Character**: Outfits 50-150, accessories 30-100, celebration animations 100-200, profile frames 50, cosmetic titles 30-80
+
+**Neighborhood** (Founders/Mayors): Banners 100, visual themes 200, event boost 50
+
+**Boosters** (carefully limited): Streak Shield 150 (pre-purchase, 1 active at a time), Streak Recovery (50-1000 coins, 48hr window), 2× Coins Day 100, detailed Health Report 50
+
+### Status Level Unlocks
+
+| Level | Threshold | Unlocks |
+|---|---|---|
+| 1 | 0 | Basic access, starter pack |
+| 3 | 500 | Custom task creation |
+| 5 | 2,000 | Global leaderboard visibility |
+| 7 | 5,000 | Profile customization, daily quests |
+| 10 | 15,000 | **Found a Neighborhood** |
+| 15 | 50,000 | **Create Clan**, mentorship |
+| 20 | 100,000 | **Claim virtual land** |
+| 25 | 250,000 | "Legend" badge, early access |
+
+### Design Principles
+1. **Status can NEVER be bought** — only earned through fitness
+2. **Coins can NEVER affect rank** — no competitive advantage
+3. **Grace Days are free and automatic** — respect that life happens
+4. **Streak Recovery has 48hr expiry** — prevents hoarding/gaming
+5. **No premium/paid currency in MVP** — monetization deferred
+
+---
+
+## ⚙️ Tech Stack (Finalized)
+
+### Architecture: **Flutter (UI) + Unity 3D (Game) + Supabase (Backend)**
+
+A hybrid approach where **Flutter handles all 11 UI screens** (premium glassmorphism, smooth animations) and **Unity handles the full 3D city world** (skyline rendering, cruise/helicopter mode). Connected via `flutter_unity_widget`.
+
+### Source of Truth Policy (Implementation)
+
+- **Final architecture is locked for v1**: Flutter + Unity 3D + Supabase backend
+- **Supporting services are part of this final stack**: Firebase Auth + FCM, Upstash Redis, Health Connect
+- If two docs conflict, **the latest approved update is the source of truth**
+- If implementation reveals a bug/constraint, we update docs + decision log, and the **new latest approved update becomes truth**
+
+| Layer | Technology | Why |
+|---|---|---|
+| **App UI (11 screens)** | **Flutter (Dart)** | Best-in-class glassmorphism, smooth transitions, cross-platform, hot reload |
+| **3D Game (2 screens)** | **Unity 3D (C#) + URP** | Full 3D rendering, custom shaders, Cinemachine camera, procedural buildings |
+| **Auth** | **Firebase Auth** | Google Sign-In, JWT tokens, best Flutter SDK |
+| **Database** | **Supabase (PostgreSQL)** | Real SQL (JOINs, window functions for leaderboards), RLS, Realtime, easy migration |
+| **Server Logic** | **Supabase Edge Functions (TypeScript)** | Task completion validation, anti-cheat, streak recovery, atomic transactions |
+| **Leaderboards + Cache** | **Upstash Redis** | Sorted sets for O(1) rank queries, atomic raid boss counters, rate limiting |
+| **Push Notifications** | **Firebase Cloud Messaging** | Streak warnings, health reports |
+| **File Storage** | **Supabase Storage** | Avatars, screenshots |
+| **Scheduled Jobs** | **pg_cron (Supabase)** | Midnight streak check, grace day reset, mayor rotation |
+| **Health Data** | **Google Health Connect** | Steps, running, cycling auto-sync |
+
+**Architecture diagram:**
+```
+┌──────────────────────────────────────┐
+│         Flutter (Dart) — 11 Screens  │
+│  Glassmorphism UI · Space Grotesk    │
+│  Dark theme · Smooth transitions     │
+├──────────────────────────────────────┤
+│  flutter_unity_widget bridge ↕       │
+├──────────────────────────────────────┤
+│    Unity 3D (C#) — 2 Screens        │
+│  Full 3D cyberpunk city · URP       │
+│  Cruise/Helicopter · Custom shaders  │
+├──────────────────────────────────────┤
+│         ↕ Health Connect API         │
+├──────────────────────────────────────┤
+│       Supabase (PostgreSQL)          │
+│  REST API · Realtime · Edge Fns     │
+│  + Upstash Redis (leaderboards)     │
+├──────────────────────────────────────┤
+│       Firebase Auth + FCM            │
+└──────────────────────────────────────┘
+```
+
+> [!NOTE]
+> **Migration-safe**: Supabase IS PostgreSQL. If you outgrow Supabase at scale, migration to self-hosted Postgres (AWS RDS/GCP Cloud SQL) is a standard `pg_dump` → `pg_restore` — zero query rewrites needed.
+
+---
+
+## 🧩 Remaining Open Questions
+
+1. **Monetization**: Deferred (revisit after MVP validation)
+2. **Content Moderation**: Needed for v2 when democratic voting launches
+
+---
+
+## 📱 Suggested MVP (v1) Feature Scope
+
+> [!NOTE]
+> All decisions confirmed. Ready for implementation planning.
+
+| Feature | In MVP? | Rationale |
+|---|---|---|
+| Virtual character creation | ✅ | Core identity |
+| Task system (pre-curated packs) | ✅ | Core loop |
+| Streak tracking | ✅ | Core motivation |
+| Social status calculation | ✅ | Core gamification |
+| **Fitness Skyline (cyberpunk city)** | ✅ | **Signature differentiator** |
+| **Helicopter Exploration Mode** | ✅ | **Immersive flyover of user's city — unique engagement feature** |
+| **Global FitCity (one world pool)** | ✅ | Solves cold start, everyone together |
+| **Global leaderboard** | ✅ | Competition driver from day 1 |
+| Google Fit / Health Connect integration | ✅ | Task verification |
+| **Health Impact Preview (per task)** | ✅ | Shows gains before committing — key differentiator |
+| **Body Age + Lifespan Added** | ✅ | Two headline health metrics, shareable |
+| **Disease Risk Reduction (top 3)** | ✅ | Research-backed, simple lookup |
+| **Money Saved projection** | ✅ | Unique angle, easy to compute |
+| **Neighborhood founding (status unlock)** | ✅ v1.1 | Unlocks when user base hits threshold |
+| VO₂ Max / Sleep / Mental Health metrics | ❌ v2 | Needs wearable data |
+| Neighborhood leaderboards & competition | ❌ v2 | Needs populated neighborhoods |
+| Democratic task voting | ❌ v2 | Needs critical mass |
+| Clans & land ownership | ❌ v2 | Needs user base first |
+| Geographic city competition | ❌ v3 | Needs enough neighborhoods |
+| AR overlay | ❌ v3+ | Advanced feature |
+| Seasonal campaigns | ❌ v2 | Content system needed |
+| Mentor system | ❌ v2 | Needs user base |
+
+---
+
+## 📋 Decision Log
+
+| Decision | Status | Notes |
+|---|---|---|
+| Fitness Skyline as signature feature | ✅ Confirmed | GitHub Skyline-inspired, cyberpunk vertical skyscraper aesthetic |
+| Cyberpunk city rendering | ✅ Confirmed | Tall vertical skyscrapers, neon-lit, pink/purple sky, water reflections |
+| Helicopter Exploration Mode | ✅ Confirmed | First-person flyover with flight controls, building popups, altitude slider, screenshot/share |
+| Skylines visible on shared world map | ✅ Confirmed | Browse and see everyone's skylines |
+| Buildings customizable via coins | ✅ Confirmed | Architectural styles, colors |
+| Target: fitness community builders | ✅ Confirmed | Not pure gamers or elite athletes |
+| **One World → Neighborhoods (phased city model)** | ✅ Confirmed | Global pool at launch, neighborhoods emerge organically |
+| **Neighborhood creation as status feature** | ✅ Confirmed | Level 10 Status unlocks founding ability, founder = Mayor |
+| **Dual membership (geo + interest)** | ✅ Confirmed | 1 geographic + 1 interest neighborhood per user |
+| **Health Impact Engine** | ✅ Confirmed | 12 metrics, research-backed lookup tables, per-task preview |
+| **Body Age + Lifespan Added in MVP** | ✅ Confirmed | Headline health metrics |
+| Monetization | ⏸️ Deferred | Revisit post-MVP |
+| **Tech stack: Flutter + Unity 3D (hybrid)** | ✅ Confirmed | Flutter for 11 UI screens (glassmorphism, premium UX), Unity 3D for city world + cruise mode, connected via `flutter_unity_widget` |
+| **Backend: Supabase (PostgreSQL) + Redis** | ✅ Confirmed | PostgreSQL for complex queries/leaderboards, Edge Functions for server logic, Upstash Redis for sorted-set leaderboards + caching |
+| **Auth: Firebase Auth + FCM** | ✅ Confirmed | Google Sign-In, push notifications, best Flutter SDK |
+| **Skyline: Full 3D (not 2.5D)** | ✅ Confirmed | Cruisable 3D city world, multi-user plots, URP rendering, custom shaders |
+| **Wearables: Health Connect** | ✅ Confirmed | Covers Google Fit, Samsung Health, Fitbit, Garmin via single API |
+| **Onboarding: Task Picker** | ✅ Confirmed | Pick 3-6 tasks from all categories, custom frequency per task |
+| **Dynamic Difficulty Scoring** | ✅ Confirmed | Effective Difficulty = Base × Frequency Multiplier, adjusts status dynamically |
+| **Streak Protection (3-layer)** | ✅ Confirmed | Grace Days (3/quarter) + Streak Shield (coins) + Recovery (48hr, escalating cost) |
+| Dual currency (Status + Coins) | ✅ Confirmed | Status = rank (non-spendable), Coins = cosmetics (spendable) |
+| **Source-of-truth policy** | ✅ Confirmed | Flutter + Unity + Supabase is final for v1; latest approved update overrides older wording; implementation bugs trigger documented updates |

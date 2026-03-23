@@ -1,0 +1,36 @@
+# OS
+.DS_Store
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+run.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Flutter / Dart
+**/.dart_tool/
+**/build/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/pubspec.lock
+
+# Platform/generated
+**/android/local.properties
+**/android/**/key.properties
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+
+# Supabase local/runtime
+supabase/.temp/
+supabase/.branches/
+
+# Node / JS (for edge function tooling if used)
+node_modules/

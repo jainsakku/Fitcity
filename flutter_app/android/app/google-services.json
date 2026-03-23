@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "344967195412",
+    "project_id": "fitcity-d53ec",
+    "storage_bucket": "fitcity-d53ec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344967195412:android:3eb1ef47becdc67f667001",
+        "android_client_info": {
+          "package_name": "com.fitcity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344967195412-ns70b53cugeith0r29cnm6l0e52pfi6t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fitcity",
+            "certificate_hash": "e8e95b3af05e174199c3c67371bcf8109c436c53"
+          }
+        },
+        {
+          "client_id": "344967195412-ajc557siaunkfpk75ftb8crug4p9d9rb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8ses9DvWtDo_Nucj9ayuJsN-jUsRFNoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344967195412-ajc557siaunkfpk75ftb8crug4p9d9rb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

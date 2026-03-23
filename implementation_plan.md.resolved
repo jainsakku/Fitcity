@@ -1,0 +1,553 @@
+# FitCity — Implementation Plan v3
+
+> **Tech Stack**: Flutter (UI) + Unity 3D (Game World) + Supabase (Backend) + Redis (Cache)
+> **Skyline**: Full 3D cityscape | **Architecture**: Hybrid via `flutter_unity_widget`
+
+---
+
+## 1. Architecture Overview
+
+```mermaid
+graph TB
+    subgraph "Flutter Layer (Dart) — 11 Screens"
+        A[Splash] --> B[Character Creation]
+        B --> C[Task Picker]
+        C --> D[Home Dashboard]
+        D --> F[Task Detail]
+        D --> G[Leaderboard]
+        D --> H[Profile]
+        F --> I[Workout Celebration]
+        H --> L[Neighborhood Hub]
+        H --> M[Coin Shop]
+        D --> K[Streak Recovery]
+    end
+
+    subgraph "Unity 3D Layer (C#) — 2 Screens"
+        E[3D Skyline City World]
+        J[Cruise / Helicopter Mode]
+        E --> J
+    end
+
+    subgraph "Backend"
+        SB[Supabase PostgreSQL + Realtime + Edge Functions]
+        RD[Upstash Redis — Leaderboards + Cache]
+        FA[Firebase Auth + FCM]
+    end
+
+    D -->|"UnityWidget embed"| E
+    E -->|"Message bridge"| D
+    D --> SB
+    D --> FA
+    SB --> RD
+```
+
+### The Split
+
+| Layer | Screens | Technology |
+|---|---|---|
+| **Flutter (11 screens)** | Splash, Character Creation, Task Picker, Home Dashboard, Task Detail, Workout Celebration, Leaderboard, Streak Recovery, Neighborhood Hub, Profile, Coin Shop | Dart + Flutter widgets |
+| **Unity 3D (2 screens)** | Cyberpunk Skyline City (full 3D world), Cruise/Helicopter Exploration | Unity C# + URP |
+| **Backend** | All server logic, data, auth | Supabase + Redis + Firebase Auth |
+
+### Bridge Communication (`flutter_unity_widget`)
+
+```dart
+// Flutter → Unity: Task completed, update skyline
+_unityController.postMessage('CityManager', 'OnTaskCompleted', jsonEncode({
+  'taskId': 'gym_workout', 'streakCount': 31, 'category': 'strength'
+}));
+
+// Flutter → Unity: Switch to another user's skyline
+_unityController.postMessage('CityManager', 'LoadUserCity', userId);
+
+// Unity → Flutter: User tapped a building
+// Unity C#: UnityMessageManager.Instance.SendMessageToFlutter(jsonData);
+```
+
+---
+
+## 2. Design System (from Stitch Mockups)
+
+| Token | Value |
+|---|---|
+| **Font** | `Space Grotesk` (Google Fonts) |
+| **Theme** | Dark mode |
+| **Primary Accent** | `#25D1F4` (cyan) |
+| **Corner Radius** | 12px |
+| **Card Style** | Glassmorphism — `BackdropFilter` blur + `rgba(255,255,255,0.06)` fill + `rgba(255,255,255,0.1)` border |
+
+### Color Palette
+
+| Role | Hex | Usage |
+|---|---|---|
+| Background | `#0A0E1A` | App scaffold |
+| Surface | `rgba(255,255,255,0.06)` | Glass cards |
+| Primary | `#25D1F4` | CTAs, active nav, highlights |
+| Cardio | `#00E5FF` (cyan) | Cardio buildings + badges |
+| Strength | `#FF2D78` (magenta) | Strength buildings + badges |
+| Wellness | `#00E676` (green) | Wellness buildings + badges |
+| Sports | `#FFB300` (amber) | Sports buildings + badges |
+| Sky gradient | `#1A0533` → `#6B2FA0` → `#D4548A` → `#F4A261` | 3D skybox horizon |
+| Text primary | `#FFFFFF` | |
+| Text secondary | `rgba(255,255,255,0.6)` | |
+
+---
+
+## 3. Full 3D Skyline City — Unity Architecture
+
+> [!IMPORTANT]
+> This is **not** a 2.5D sprite renderer. It's a full 3D cyberpunk city world with real geometry, volumetric lighting, post-processing, and a cruisable third-person experience.
+
+### 3.1 Unity Rendering Pipeline
+
+| Component | Choice | Rationale |
+|---|---|---|
+| **Render Pipeline** | **URP** | Best mobile performance, supports post-processing |
+| **Lighting** | Baked GI + 1 real-time directional + emissive windows | Performance-friendly |
+| **Post-Processing** | URP Volume: Bloom, Color Grading, Vignette, Film Grain | Cyberpunk atmosphere |
+| **Skybox** | Custom procedural skybox shader | Dusk-to-night cycle |
+| **Camera** | Cinemachine FreeLook + Virtual Camera | Smooth cruise/orbit |
+
+### 3.2 City World Structure
+
+```
+City World (Unity Scene)
+├── Skybox Layer (gradient + clouds + stars)
+├── City Grid
+│   ├── Ground plane (dark asphalt with grid glow)
+│   ├── Road network (grid template)
+│   └── Districts[] (one per user)
+│       ├── Building[] (procedurally placed from task data)
+│       ├── District signage (user name, level)
+│       └── Boundary glow ring
+├── Atmosphere (volumetric fog + neon lights + god rays)
+├── Water/Harbor (planar reflection + wave shader)
+├── Player (avatar + camera rig + movement controller)
+└── UI Overlay (HUD, tooltips, capture/exit buttons)
+```
+
+### 3.3 Building Generation (Modular 3D)
+
+```
+Building = Base + Body Segments (N floors) + Crown + Details
+```
+
+| Category | Style | Materials |
+|---|---|---|
+| **Cardio** | Sleek modern glass | Cyan emissive |
+| **Strength** | Industrial/brutalist | Magenta neon |
+| **Wellness** | Organic/curved | Green glow |
+| **Sports** | Stadium hybrid | Amber floodlights |
+
+**Height**: streak_count × 5 (capped 500m). **State**: construction (< 7 days), complete, cracked (broken).
+
+### 3.4 Cruise / Exploration Controls
+
+| Control | Input | Behavior |
+|---|---|---|
+| Movement | Joystick / swipe | Walk/fly avatar |
+| Camera | Drag | Orbit (Cinemachine FreeLook) |
+| Altitude | Vertical slider | Street Level ↔ Bird's Eye |
+| Speed/Cruise | Button + display | Auto-forward at set speed |
+| Building tap | Raycast | Glass tooltip popup |
+| Capture | Button | Screenshot → share |
+
+### 3.5 Multi-User City World
+
+Each user gets a 200m×200m plot. Plots arranged in grid with roads. LOD for distant plots. Lazy-loaded from Supabase via proximity triggers.
+
+### 3.6 Shaders (URP)
+
+`CyberpunkSkybox`, `BuildingWindow`, `NeonGlow`, `WaterSurface`, `HologramTooltip`, `CrackedBuilding`, `AtmosphericFog`
+
+### 3.7 3D Model Assets
+
+~40 modular building pieces + avatar + props. Source: Blender or Unity Asset Store (POLYGON City, Sci-Fi City Pack, Mixamo animations).
+
+---
+
+## 4. Flutter Screens — Detailed Specs
+
+### Screen 1: Splash Screen
+`AnimatedOpacity` + `Lottie` animation, auth check → Home or Character Creation.
+
+### Screen 2: Character Creation
+Archetype cards (×4), name `TextField`, avatar config. → `PATCH users` via Supabase.
+
+### Screen 3: Task Picker
+Category browsing, frequency slider (1-7x/week), live health impact preview. Min 3, max 6 tasks. → `POST user_tasks` + `INSERT streaks`.
+
+### Screen 4: Home Dashboard
+Time-aware greeting, level badge, `UnityWidget` mini skyline, today's task cards with streak + progress ring, health metrics 2×2 grid. → `GET v_user_dashboard` + Realtime on `streaks`.
+
+### Screen 5: Task Detail & Health Impact
+Task header + difficulty, per-metric health cards, earnings preview, "Start Workout" + "Mark Complete" CTAs. → `complete-task` Edge Function.
+
+### Screen 6: Workout Celebration
+Confetti + Lottie trophy, count-up status/coins, health impact message, building growth mini Unity embed. → Response from `complete-task`.
+
+### Screen 7: Global Leaderboard
+Time tabs (All/Month/Week), podium top 3, scrollable list, user row highlighted. → `get-leaderboard` Edge Function (Redis).
+
+### Screen 8: Streak Recovery
+Broken streak alert, grace days display, shield purchase, recovery cost table, 48hr countdown. → `recover-streak` Edge Function.
+
+### Screen 9: Neighborhood Hub
+Name + motto, collective skyline (mini Unity), stats, raid boss progress bar, member list, mayor announcement. → `GET neighborhoods` + Realtime on `raid_bosses`.
+
+### Screen 10: User Profile
+Avatar + stats, skyline preview (mini Unity), achievements grid, neighborhoods, share/shop CTAs. → `GET users` + `GET user_achievements`.
+
+### Screen 11: Coin Shop
+Tabs (Skins/Colors/Effects/Character), grid of items, preview in mini Unity, purchase flow. → `purchase-item` Edge Function.
+
+---
+
+## 5. Project Structure
+
+```
+fitcity/
+├── flutter_app/                          # Flutter project
+│   ├── lib/
+│   │   ├── main.dart
+│   │   ├── app.dart                      # MaterialApp, routing, theme
+│   │   ├── theme/                        # app_theme, colors, glass_card
+│   │   ├── routes/app_router.dart        # GoRouter
+│   │   ├── models/                       # user_profile, task, streak, etc.
+│   │   ├── repositories/                 # Repository pattern (swap Supabase later)
+│   │   │   ├── auth_repository.dart
+│   │   │   ├── task_repository.dart
+│   │   │   ├── streak_repository.dart
+│   │   │   ├── leaderboard_repository.dart
+│   │   │   ├── neighborhood_repository.dart
+│   │   │   └── shop_repository.dart
+│   │   ├── providers/                    # Riverpod providers
+│   │   ├── services/
+│   │   │   ├── supabase_service.dart     # Supabase client init
+│   │   │   ├── auth_service.dart         # Firebase Auth
+│   │   │   ├── health_impact_service.dart
+│   │   │   ├── unity_bridge_service.dart
+│   │   │   └── share_service.dart
+│   │   ├── screens/                      # 11 screen folders
+│   │   ├── widgets/                      # Shared widgets
+│   │   └── data/                         # JSON lookup tables
+│   └── pubspec.yaml
+│
+├── unity_project/                        # Unity 3D project
+│   ├── Assets/
+│   │   ├── Scenes/                       # CityWorld, SkylinePreview
+│   │   ├── Scripts/
+│   │   │   ├── Core/                     # CityManager, FlutterBridge, DataModels
+│   │   │   ├── City/                     # CityGrid, BuildingGenerator, WindowController, etc.
+│   │   │   ├── Player/                   # PlayerController, CameraController, CruiseMode
+│   │   │   ├── UI/                       # HUDController, BuildingTooltip, MinimapCamera
+│   │   │   └── Environment/             # SkyboxController, WaterManager, FogController
+│   │   ├── Shaders/                      # 7 custom shaders
+│   │   ├── Materials/ Models/ Textures/ Prefabs/ Fonts/
+│   │   └── Resources/BuildingConfig.json
+│   └── Packages/                         # URP, Cinemachine, TMP, InputSystem, DOTween
+│
+└── supabase/                             # Backend
+    ├── config.toml
+    ├── seed.sql
+    ├── migrations/                       # 5 migration files
+    └── functions/                        # 8 Edge Functions + _shared/
+```
+
+---
+
+## 6. Backend Summary
+
+> Full backend architecture documented separately in [backend_architecture.md](file:///Users/saksham/.gemini/antigravity/brain/c6cfa096-0565-4880-aaaf-d5fe320abf5d/backend_architecture.md)
+
+| Component | Technology | Purpose |
+|---|---|---|
+| **Auth** | Firebase Auth | Google Sign-In, JWT tokens |
+| **Database** | Supabase (PostgreSQL) | 13 tables, views, triggers, RLS |
+| **Auto-API** | PostgREST | Direct CRUD (10 endpoints) |
+| **Server Logic** | Supabase Edge Functions (TypeScript) | 8 validated endpoints |
+| **Leaderboards** | Upstash Redis (sorted sets) | O(log N) insert, O(1) rank |
+| **Realtime** | Supabase Realtime (WebSocket) | Streaks, raids, user stats |
+| **Scheduled Jobs** | pg_cron | Midnight streak check, grace reset, mayor rotation |
+| **Push** | Firebase Cloud Messaging | Streak warnings, weekly reports |
+| **Storage** | Supabase Storage | Avatars, screenshots |
+
+---
+
+## 7. Packages
+
+### Flutter
+
+| Package | Purpose |
+|---|---|
+| `flutter_unity_widget` | Embed Unity 3D view |
+| `supabase_flutter` | Database + Realtime + Edge Functions |
+| `firebase_auth` | Authentication |
+| `firebase_messaging` | Push notifications |
+| `flutter_riverpod` | State management |
+| `go_router` | Declarative routing |
+| `google_fonts` | Space Grotesk |
+| `lottie` | Splash + celebration animations |
+| `confetti` | Confetti effect |
+| `share_plus` | Native share sheet |
+| `health` | Health Connect / HealthKit |
+| `cached_network_image` | Image caching |
+| `shimmer` | Loading skeletons |
+
+### Unity
+
+| Package | Purpose |
+|---|---|
+| Universal Render Pipeline (URP) | Mobile rendering |
+| Cinemachine | Camera rigs |
+| TextMeshPro | 3D neon sign text |
+| Input System | Virtual joysticks |
+| DOTween | Tweening animations |
+
+---
+
+## 8. Implementation Phases
+
+> Phases reorganized: **Flutter UI + Backend first** → **Unity 3D** → **Integration**
+
+---
+
+### PART A: Flutter UI + Backend (Weeks 1–6)
+
+#### Phase 1: Foundation & Backend Setup (Week 1–2)
+
+**Flutter Foundation:**
+- [ ] Initialize Flutter project with `pubspec.yaml` dependencies
+- [ ] Implement design system: `app_theme.dart` (Space Grotesk, dark ThemeData), `colors.dart`, `glass_card.dart`, `gradient_button.dart`, `neon_badge.dart`, `progress_ring.dart`
+- [ ] Set up GoRouter with all 11 routes + persistent `BottomNavigationBar`
+- [ ] Create repository pattern layer (`AuthRepository`, `TaskRepository`, `StreakRepository`, `LeaderboardRepository`, `NeighborhoodRepository`, `ShopRepository`)
+- [ ] Set up Riverpod providers for all repositories
+
+**Backend Setup:**
+- [ ] Create Supabase project + configure environment variables
+- [ ] Run migration `001_core_tables.sql` — create all 13 tables with triggers
+- [ ] Run migration `002_views.sql` — `v_user_dashboard`, `v_city_buildings`
+- [ ] Run migration `003_rls.sql` — Row Level Security policies
+- [ ] Run migration `004_rpc_functions.sql` — `process_task_completion`, `recover_streak`, `purchase_shop_item`
+- [ ] Run migration `005_cron_jobs.sql` — midnight streak check, grace reset, mayor rotation
+- [ ] Set up Upstash Redis instance + connection from Edge Functions
+- [ ] Set up Firebase Auth project + integrate with Flutter
+- [ ] Populate `seed.sql` — task catalog (30+ tasks), shop items, achievement definitions
+- [ ] Deploy Edge Function: `complete-task` (core loop — most critical)
+- [ ] Deploy Edge Function: `get-leaderboard`
+- [ ] Deploy Edge Function: `recover-streak`
+- [ ] Deploy Edge Function: `purchase-item`
+- [ ] Deploy Edge Function: `get-city-data`
+- [ ] Deploy Edge Functions: `buy-streak-shield`, `join-neighborhood`, `found-neighborhood`
+
+**Integration test:** Flutter app → Firebase Auth login → Supabase insert user → read back → verified.
+
+---
+
+#### Phase 2: Onboarding UI + Backend Integration (Week 2–3)
+
+- [ ] **Splash screen** — Lottie animation, auth state check (`FirebaseAuth.instance.currentUser`), auto-redirect
+- [ ] **Character Creation screen** — archetype selection cards (×4), name input with validation (3-20 chars), avatar config pickers
+  - Backend: `PATCH /rest/v1/users` → write name, archetype, avatar_config
+  - Backend: Assign `city_plot_x`, `city_plot_y` (next available plot in grid)
+- [ ] **Task Picker screen** — category sections, toggleable task cards, frequency slider per task, live `HealthImpactService` calculation at bottom
+  - Backend: `GET /rest/v1/task_catalog` → display all available tasks
+  - Backend: `POST /rest/v1/user_tasks` + auto-create matching `streaks` row (DB trigger)
+- [ ] `HealthImpactService` — load `health_impact_lookup.json`, compute Body Age/Lifespan/Disease Risk combo preview
+- [ ] End-to-end flow: Splash → Character → Task Picker → Home (with data persisted to Supabase)
+
+---
+
+#### Phase 3: Core Loop UI + Backend (Week 3–5)
+
+- [x] **Home Dashboard** — greeting (time-aware), level badge, today's task `ListView.builder`, health metrics 2×2 grid
+  - Backend: `GET /rest/v1/v_user_dashboard?user_id=eq.{uid}` — single query returns tasks + streaks joined
+  - Backend: Realtime subscription on `streaks` table → auto-update streak counts in UI
+- [x] **Task Detail & Health Impact** — task header, health metric cards, earnings preview, "Start Workout" / "Mark Complete" CTAs
+  - Backend: `complete-task` Edge Function call → receive { streakCount, statusEarned, coinsEarned, healthMessage }
+- [x] **Health Connect integration** — `health` package → read step count, running, cycling for auto-verified tasks
+- [x] **Workout Celebration** — confetti, Lottie trophy, animated count-up, health impact message
+  - Backend: Display response data from `complete-task`
+- [x] **Streak Recovery screen** — broken alert, grace days display, shield button, recovery cost table, 48hr countdown timer
+  - Backend: `recover-streak` Edge Function (atomic coin deduction + streak restore)
+  - Backend: `buy-streak-shield` Edge Function (deduct 150 coins + set `shield_active = TRUE`)
+- [x] Status + Coins earning engine — formula: `10 × effective_difficulty × streak_multiplier × verification_weight`
+- [ ] Verify midnight streak cron job works correctly (break streak → grace day consumed → broken state)
+
+---
+
+#### Phase 4: Social & Economy UI + Backend (Week 4–6)
+
+- [ ] **Global Leaderboard** — segmented tabs (All/Month/Week), podium top 3, scrollable list
+  - Backend: `get-leaderboard` Edge Function → Redis `ZREVRANGE` + profile hydration from Postgres
+  - Tap user row → navigate to their profile
+- [ ] **User Profile** — avatar + stats, achievements grid (earned=colored, locked=gray), neighborhood cards
+  - Backend: `GET /rest/v1/users`, `GET /rest/v1/user_achievements`
+  - Share Profile: screenshot → `share_plus`
+- [ ] **Neighborhood Hub** — name/motto header, collective stats, rival comparison, raid boss progress bar, member list
+  - Backend: `GET /rest/v1/neighborhoods`, `GET /rest/v1/neighborhood_members`, `GET /rest/v1/raid_bosses`
+  - Realtime: subscription on `raid_bosses` table for live progress
+  - Backend: `join-neighborhood`, `found-neighborhood` Edge Functions
+- [ ] **Coin Shop** — tabs (Skins/Colors/Effects/Character), `GridView.builder` of items, purchase flow
+  - Backend: `GET /rest/v1/shop_items`, `GET /rest/v1/user_inventory`
+  - Backend: `purchase-item` Edge Function (atomic deduct + grant)
+- [ ] **Push notifications** — Firebase Cloud Messaging setup, streak warning (6pm if not completed), weekly health summary
+- [ ] **Achievement checking** — trigger checks after task completion (streak milestones, total completions, etc.)
+
+**Milestone: All 11 Flutter screens complete and fully connected to Supabase backend. Core loop end-to-end working.**
+
+---
+
+### PART B: Unity 3D (Weeks 5–9)
+
+#### Phase 5: 3D City World — Core Environment (Week 5–7) ⭐ Critical Path
+
+- [ ] Unity project setup: URP, Cinemachine, PostProcessing, InputSystem, TextMeshPro, DOTween
+- [ ] `CyberpunkSkybox.shader` — procedural sunset gradient + animated clouds + star field
+- [ ] City grid ground plane — dark asphalt with subtle neon grid lines, road network from template
+- [ ] `AtmosphericFog.shader` — distance-based purple-tinted fog
+- [ ] `WaterSurface.shader` — planar reflection + wave normals + caustics (harbor area)
+- [ ] URP Post-Processing Volume: Bloom, Color Grading (cyberpunk LUT), Vignette, Film Grain
+- [ ] Baked lighting setup: directional sun/moon + ambient from skybox + emissive contributions
+- [ ] `SkyboxController.cs` + `FogController.cs` + `WaterManager.cs` + `LightingManager.cs`
+
+---
+
+#### Phase 6: 3D Building Generation System (Week 6–8)
+
+- [ ] Modular building prefabs: 4 categories × (base + 5 floor variants + 3 crown variants) = ~40 pieces
+- [ ] `BuildingGenerator.cs` — read task data JSON → assemble Base + N × Floor + Crown
+- [ ] `BuildingModules.cs` — category → architectural style mapping + random variation selection
+- [ ] `BuildingWindow.shader` — emissive window grid with per-cell mask (lit based on streak recency)
+- [ ] `WindowController.cs` — generate `_WindowMask` texture from `days_since_last_completion`
+- [ ] `NeonGlow.shader` + `NeonSignManager.cs` — 3D TextMeshPro signs on facades, category-colored bloom
+- [ ] `ConstructionCrane.cs` — crane prefab on buildings with active streak < 7 days
+- [ ] `CrackedBuilding.shader` + `BuildingDecay.cs` — crack overlay + desaturation for broken streaks, dissolve heal animation for recovered
+- [ ] `CityGrid.cs` — world grid layout, plot placement (200m × 200m per user), road generation between plots
+- [ ] `DistrictLoader.cs` — load building data from JSON/REST, generate buildings for a user plot, signage (name + level)
+
+---
+
+#### Phase 7: Player & Cruise System (Week 7–9)
+
+- [ ] Avatar model setup — hooded figure from Mixamo, walk/fly/idle animations
+- [ ] `PlayerController.cs` — CharacterController (walking) / Rigidbody (flying), gravity toggle, movement input
+- [ ] `CameraController.cs` — Cinemachine FreeLook rig: walking (close, slight tilt), flying (higher, wider FOV), bird's eye (top-down 45°)
+- [ ] `AltitudeController.cs` — slider UI → smooth lerp between camera modes + movement mode toggle
+- [ ] `CruiseMode.cs` — auto-forward at `cruiseSpeed`, toggle button, speed display (knots)
+- [ ] `HUDController.cs` — altitude (FT), compass (N/S/E/W from camera Y rotation), speed, recording indicator
+- [ ] `BuildingTooltip.cs` — raycast from screen tap → show glass popup (name, district, streak, height, "TAP TO SEE DETAILS")
+- [ ] `HologramTooltip.shader` — semi-transparent scan-line glass material for tooltip popup
+- [ ] `MinimapCamera.cs` — secondary camera overhead → RenderTexture → minimap UI image
+- [ ] `CaptureManager.cs` — capture screenshot → save to file → send path to Flutter for sharing
+
+---
+
+#### Phase 8: Multi-User World (Week 8–9)
+
+- [ ] `DistrictLoader.cs` — proximity trigger system: when player enters distance < 300m from unloaded plot, fetch data + generate
+- [ ] Supabase REST calls from Unity: `GET /rest/v1/v_city_buildings?city_plot_x=...` via `UnityWebRequest`
+- [ ] LOD system: full detail within 200m, simplified box silhouettes 200-500m, hidden beyond 500m
+- [ ] District boundary glow ring + floating signage (TextMeshPro 3D: "Alex's District · Level 12")
+- [ ] Plot unloading: destroy building GameObjects when player moves > 500m away (memory management)
+- [ ] `DataModels.cs` — C# data classes matching Supabase view schema, JSON deserialization
+
+---
+
+### PART C: Flutter ↔ Unity Integration (Weeks 9–12)
+
+#### Phase 9: Bridge Setup & Skyline Embedding (Week 9–10)
+
+- [ ] Add `flutter_unity_widget` to Flutter project, configure iOS/Android build pipelines
+- [ ] Export Unity project as Android library (`.aar`) + iOS framework
+- [ ] `FlutterBridge.cs` (Unity side) — message listener: parse JSON from Flutter, dispatch to `CityManager`
+- [ ] `UnityBridgeService` (Flutter side) — typed methods: `loadUserCity(uid)`, `onTaskCompleted(taskData)`, `switchToHelicopterMode()`, `captureScreenshot()`
+- [ ] **Home Dashboard**: embed mini `UnityWidget` (200px height) showing user's own skyline silhouette
+  - Flutter sends: `LoadUserCity` with current user's building data
+  - Tap → navigate to full-screen skyline
+- [ ] **Full skyline view**: full-screen `UnityWidget` with altitude slider, cruise button, HUD overlay
+  - Flutter bottom nav bar visible at bottom (shared navigation)
+  - "Exit to Skyline" → return to Flutter Home Dashboard
+- [ ] Bridge bidirectional test: Flutter sends task data → Unity updates building → Unity sends "building tapped" → Flutter shows detail
+
+---
+
+#### Phase 10: Deep Integration Features (Week 10–11)
+
+- [ ] **Workout Celebration → Building Growth**: after `complete-task` Edge Function succeeds:
+  - Flutter sends `OnTaskCompleted` to Unity with { taskId, newStreakCount, category }
+  - Unity plays building-grow animation (DOTween scale Y) + construction crane removal (if streak ≥ 7)
+  - Mini Unity view in celebration screen shows the specific building's before/after
+- [ ] **Leaderboard → Visit Skyline**: tap a user row in Leaderboard:
+  - Flutter sends `LoadUserCity(theirUid)` to Unity
+  - Unity loads their plot data from Supabase REST → generates their buildings
+  - Camera flies to their district
+- [ ] **Neighborhood Hub → Collective Skyline**: mini Unity embed showing merged neighborhood buildings
+  - Flutter sends `LoadNeighborhoodCity(neighborhoodId)` → Unity loads all member plots
+- [ ] **Coin Shop → Skin Preview**: tap a building skin item:
+  - Flutter sends `PreviewSkin(taskId, skinId)` to Unity
+  - Unity applies the skin material → user sees live 3D preview
+  - On purchase confirmation → Flutter calls `purchase-item` Edge Function → sends `ApplySkin` to Unity
+- [ ] **Profile → Skyline Preview**: mini Unity embed of own skyline (same as home dashboard embed)
+- [ ] **Streak Recovery → Building Heal**: on successful recovery:
+  - Flutter sends `OnStreakRecovered(taskId)` to Unity
+  - Unity plays crack-dissolve heal animation on the building
+
+---
+
+#### Phase 11: Polish, Performance & Launch (Week 11–12)
+
+- [ ] **Performance tuning:**
+  - Unity: LOD distance tuning, draw call budget < 100, texture compression (ASTC), occlusion culling
+  - Flutter: widget rebuild optimization, `const` constructors, image caching
+  - Memory: plot unloading when distant, texture streaming
+- [ ] **Sound design:**
+  - Ambient city hum + distant traffic
+  - Cruise mode: wind sound, engine hum scaled by speed
+  - Building grow: deep bass + glass chime SFX
+  - UI: subtle click/tap sounds, streak break alert
+- [ ] **Haptic feedback**: task completion, building tap, cruise mode toggle, purchase confirmation
+- [ ] **APK size optimization**: target < 80MB
+  - Addressables for 3D assets (load on demand)
+  - Strip unused Unity shaders
+  - Compress audio to OGG
+- [ ] **Edge case testing:**
+  - Streak midnight rollover across timezones
+  - No internet → offline mode (cached data, queue completions)
+  - Multiple rapid task completions
+  - Building state after streak break → recovery → re-completion
+- [ ] **Firebase Crashlytics + Analytics setup**
+- [ ] **End-to-end test**: New user → onboarding → pick tasks → complete workout → see building grow → cruise city → visit neighbor → break streak → recover → buy skin
+- [ ] **Beta testing (20-30 users)** — TestFlight / Firebase App Distribution
+
+---
+
+## 9. Risks & Mitigations
+
+| Risk | Impact | Mitigation |
+|---|---|---|
+| `flutter_unity_widget` stability | High | Test bridge in Phase 9 (week 9-10); fallback to native UAAL |
+| 3D performance on low-end devices | High | LOD system, draw call budget < 100, ASTC textures, occlusion culling |
+| Multi-user data loading latency | Medium | Proximity lazy-loading, silhouette placeholders, Supabase pagination |
+| Unity APK size bloat | Medium | Addressables, strip shaders, compress textures |
+| Streak midnight timezone issues | High | All streak logic in pg_cron using UTC timestamps |
+| Supabase Edge Function cold starts | Low | Critical paths (completion) called frequently enough to stay warm |
+| Building tooltip raycast accuracy | Medium | Enlarged box colliders, visual hover highlight |
+
+---
+
+## 10. Verification Plan
+
+### Automated
+- **Flutter**: Widget tests for all 11 screens, unit tests for `HealthImpactService`, `StreakService`, status calculator
+- **Backend**: Integration tests against Supabase local dev (supabase start) — full task completion flow → streak update → leaderboard update
+- **Unity**: Play mode tests for `BuildingGenerator` (height, category, module count)
+- **Redis**: Verify leaderboard ZADD/ZREVRANGE round-trip with test data
+
+### Manual
+1. **Skyline accuracy**: Test user with known data → verify building heights/colors match expected
+2. **Cruise controls**: Physical device — joystick, altitude slider, cruise mode feel smooth (30fps+)
+3. **Multi-user**: 5 test accounts → all plots visible when cruising
+4. **Streak flow**: Break → grace day → break again → recovery → 48hr expiry
+5. **Bridge**: Task completion in Flutter → building grows in Unity → screenshot → shared via Flutter
+6. **Performance**: Profile on Pixel 4a baseline — target 30fps+ in city, 60fps in Flutter UI
