@@ -9,10 +9,7 @@
 *.log
 run.log
 
-# Environment files
-.env
-.env.*
-!.env.example
+
 
 # Flutter / Dart
 **/.dart_tool/
